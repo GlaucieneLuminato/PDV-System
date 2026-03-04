@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
@@ -11,24 +12,57 @@ class Produto(models.Model):
       return self.nome
 
 class Venda(models.Model):
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    quantidade = models.IntegerField()
-    total = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    data_venda = models.DateTimeField(auto_now_add=True)
+  data_venda = models.DateTimeField(auto_now_add=True)
 
+  def __str__(self):
+        return f"Venda #{self.id}"
+
+  def total(self):
+    total = Decimal("0.00")
+    for item in self.itens.all():
+        total += item.subtotal()
+        return total
+  total.short_description = "Total"
     
+class ItemVenda(models.Model):
+    venda = models.ForeignKey(Venda, related_name= "itens", on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete= models.CASCADE)
+    quantidade = models.IntegerField()
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
     def clean(self):
-        if self.quantidade > self.produto.estoque:
-            raise ValidationError("Estoque insuficiente para realizar a venda.")
-    def save(self, *args,**kwargs):
-        self.full_clean()
-        self.total = self.produto.preco * self.quantidade
-        self.produto.estoque -= self.quantidade
-        self.produto.save()
-        super().save(*args,**kwargs)
+     if self.quantidade > self.produto.estoque:
+        raise ValidationError("Estoque insuficiente para este item.")
 
+    def subtotal(self):
+        return self.quantidade * self.preco_unitario
+            
+    def save(self,*args,**kwargs):
+                self.full_clean()
+
+                if not self.preco_unitario:
+                    self.preco_unitario = self.produto.preco
+                if not self.pk:
+                    if self.quantidade > self.produto.estoque:
+                        raise ValidationError("Estoque insuficiente.")
+                    self.produto.estoque -= self.quantidade
+                    self.produto.save()
+
+                    super().save(*args, **kwargs)
+
+    def delete(self,*args,**kwargs):
+                    self.produto.estoque += self.quantidade
+                    self.produto.save()
+                    super().delete(*args,**kwargs)
     def __str__(self):
-        return f"Vendas #{self.id}"
+                    return f"{self.produto.nome} - {self.quantidade}"
+
+
+    def subtotal(self):
+                    return self.quantidade * self.preco_unitario
+                    
+    def __str__(self):
+                    return f"{self.produto.nome} - {self.quantidade}"
+        
 
 
 # Create your models here.
