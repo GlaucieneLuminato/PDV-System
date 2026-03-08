@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAXIMO · Pesquisar no Stock</title>
+    <!-- Bootstrap 5 + ícones -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6fb;
+            color: #1a2639;
+            padding: 2rem;
+        }
+
+        /* painel principal */
+        .stock-panel {
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 20px 40px rgba(0,10,30,0.05);
+            padding: 2rem 2rem 2.5rem 2rem;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        /* cabeçalho */
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.2rem;
+        }
+
+        .page-header h2 {
+            font-weight: 700;
+            color: #1e3c72;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header h2 i {
+            background: #eef3fc;
+            padding: 12px;
+            border-radius: 20px;
+            color: #1e3c72;
+        }
+
+        .stock-badge {
+            background: #d4e2fc;
+            color: #1e3c72;
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-badge i {
+            font-size: 1.1rem;
+        }
+
+        /* cards de resumo rápido */
+        .summary-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 2.5rem;
+        }
+
+        .summary-item {
+            background: #f9fbfe;
+            border-radius: 26px;
+            padding: 1.3rem 2rem 1.3rem 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border: 1px solid #eef2f7;
+            flex: 1 1 200px;
+        }
+
+        .summary-icon {
+            background: white;
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.02);
+        }
+
+        .summary-icon i {
+            font-size: 2rem;
+            color: #1e3c72;
+        }
+
+        .summary-info h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            color: #1a2639;
+        }
+
+        .summary-info p {
+            margin: 0;
+            color: #5e6f92;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* barra de pesquisa e filtros */
+        .search-section {
+            background: #f8fafd;
+            border-radius: 60px;
+            padding: 0.5rem 0.5rem 0.5rem 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e6ecf5;
+        }
+
+        .search-input-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 2 1 300px;
+        }
+
+        .search-input-group i {
+            color: #8094ae;
+            font-size: 1.4rem;
+        }
+
+        .search-input-group input {
+            border: none;
+            background: transparent;
+            padding: 0.9rem 0;
+            font-size: 1.1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-input-group input::placeholder {
+            color: #b5c3d9;
+            font-weight: 400;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            background: white;
+            border: 1px solid #dce3ef;
+            border-radius: 40px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 500;
+            color: #405479;
+            font-size: 0.9rem;
+            transition: 0.1s;
+        }
+
+        .btn-filter i {
+            margin-right: 6px;
+        }
+
+        .btn-filter:hover {
+            background: #e6edfa;
+            border-color: #b5c9f0;
+        }
+
+        .btn-filter.active {
+            background: #1e3c72;
+            border-color: #1e3c72;
+            color: white;
+        }
+
+        /* tabela de estoque */
+        .table-responsive {
+            border-radius: 28px;
+            background: white;
+            padding: 0.5rem 0 0 0;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid #eaecf0;
+            color: #435472;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 1.2rem 1rem 0.9rem 1rem;
+        }
+
+        .table tbody td {
+            padding: 1.1rem 1rem;
+            vertical-align: middle;
+            color: #1b2942;
+            font-weight: 500;
+            border-bottom: 1px solid #f1f4f9;
+        }
+
+        .product-img {
+            width: 44px;
+            height: 44px;
+            background: #eef2f8;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .stock-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stock-bar {
+            width: 70px;
+            height: 8px;
+            background: #e6ecf5;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .stock-fill {
+            height: 100%;
+            background: #2e7d32;
+            border-radius: 40px;
+        }
+
+        .stock-fill.warning {
+            background: #ed6c02;
+        }
+
+        .stock-fill.critical {
+            background: #d32f2f;
+        }
+
+        .badge-stock {
+            background: #e9ecf5;
+            color: #1e3c72;
+            font-weight: 600;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+        }
+
+        .badge-lowstock {
+            background: #ffecba;
+            color: #8e6100;
+        }
+
+        .action-icons i {
+            font-size: 1.4rem;
+            color: #8f9fb9;
+            margin: 0 5px;
+            cursor: default;
+        }
+
+        .footer-info {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #7085a6;
+        }
+
+        .pagination-custom {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-item {
+            list-style: none;
+        }
+
+        .page-link-custom {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid #dee6f0;
+            color: #2f4672;
+            font-weight: 500;
+            transition: 0.1s;
+            text-decoration: none;
+        }
+
+        .page-link-custom:hover {
+            background: #eef3fc;
+            border-color: #b3c7ed;
+        }
+
+        .page-link-custom.active {
+            background: #1e3c72;
+            border-color: #1e3c72;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .stock-panel { padding: 1.5rem; }
+            .search-section { border-radius: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid p-0">
+    <div class="stock-panel">
+        <!-- Cabeçalho com título e badge de stock -->
+        <div class="page-header">
+            <h2>
+                <i class="bi bi-box-seam"></i> 
+                Pesquisar no Stock
+            </h2>
+            <div class="stock-badge">
+                <i class="bi bi-database"></i> 238 produtos · 4 categorias
+            </div>
+        </div>
+
+        <!-- Cards resumo (quantidade, valor, estoque baixo, reservado) -->
+        <div class="summary-row">
+            <div class="summary-item">
+                <div class="summary-icon"><i class="bi bi-cubes"></i></div>
+                <div class="summary-info">
+                    <h4>3.428</h4>
+                    <p>unidades em estoque</p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-icon"><i class="bi bi-coin"></i></div>
+                <div class="summary-info">
+                    <h4>R$ 487,2k</h4>
+                    <p>valor em mercadorias</p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <div class="summary-info">
+                    <h4>12</h4>
+                    <p>itens abaixo do mínimo</p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-icon"><i class="bi bi-truck"></i></div>
+                <div class="summary-info">
+                    <h4>43</h4>
+                    <p>reservados / em trânsito</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- área de pesquisa e filtros -->
+        <div class="search-section">
+            <div class="search-input-group">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Buscar produto, SKU, código de barras...">
+            </div>
+            <div class="filter-buttons">
+                <button class="btn-filter active"><i class="bi bi-funnel"></i> Todos</button>
+                <button class="btn-filter"><i class="bi bi-tag"></i> Categorias</button>
+                <button class="btn-filter"><i class="bi bi-exclamation-circle"></i> Estoque baixo</button>
+                <button class="btn-filter"><i class="bi bi-upc-scan"></i> Digitalizar</button>
+            </div>
+        </div>
+
+        <!-- Tabela de produtos -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>SKU / Código</th>
+                        <th>Categoria</th>
+                        <th>Stock</th>
+                        <th>Preço custo</th>
+                        <th>Preço venda</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linha 1 -->
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="product-img"><i class="bi bi-phone"></i></div>
+                                <div>
+                                    <span class="fw-semibold">Smartphone Galaxy S23</span><br>
+                                    <span class="text-secondary small">128GB, preto</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge-stock">SM-S23-128</span></td>
+                        <td>Eletrônicos</td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="fw-semibold">58 un</span>
+                                <div class="stock-bar"><div class="stock-fill" style="width: 70%"></div></div>
+                            </div>
+                        </td>
+                        <td>R$ 2.380</td>
+                        <td>R$ 3.299</td>
+                        <td><span class="badge-stock"><i class="bi bi-check-circle-fill text-success me-1"></i>ativo</span></td>
+                        <td class="action-icons"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i></td>
+                    </tr>
+                    <!-- Linha 2 -->
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="product-img"><i class="bi bi-laptop"></i></div>
+                                <div>
+                                    <span class="fw-semibold">Notebook Ultra 15</span><br>
+                                    <span class="text-secondary small">i7/16GB/512GB</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge-stock">NB-ULTRA-i7</span></td>
+                        <td>Informática</td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="fw-semibold">12 un</span>
+                                <div class="stock-bar"><div class="stock-fill warning" style="width: 28%"></div></div>
+                            </div>
+                        </td>
+                        <td>R$ 4.120</td>
+                        <td>R$ 5.849</td>
+                        <td><span class="badge-stock badge-lowstock"><i class="bi bi-exclamation-triangle-fill me-1"></i>estoque baixo</span></td>
+                        <td class="action-icons"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i></td>
+                    </tr>
+                    <!-- Linha 3 -->
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="product-img"><i class="bi bi-headphones"></i></div>
+                                <div>
+                                    <span class="fw-semibold">Fone Bluetooth Max</span><br>
+                                    <span class="text-secondary small">cancelamento noise</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge-stock">FONE-BT-X2</span></td>
+                        <td>Aúdio</td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="fw-semibold">132 un</span>
+                                <div class="stock-bar"><div class="stock-fill" style="width: 92%"></div></div>
+                            </div>
+                        </td>
+                        <td>R$ 187</td>
+                        <td>R$ 349</td>
+                        <td><span class="badge-stock"><i class="bi bi-check-circle-fill text-success me-1"></i>ativo</span></td>
+                        <td class="action-icons"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i></td>
+                    </tr>
+                    <!-- Linha 4 -->
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="product-img"><i class="bi bi-tv"></i></div>
+                                <div>
+                                    <span class="fw-semibold">Monitor 27" 4K UHD</span><br>
+                                    <span class="text-secondary small">IPS, HDR</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge-stock">MN-4K-27</span></td>
+                        <td>Monitores</td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="fw-semibold">7 un</span>
+                                <div class="stock-bar"><div class="stock-fill critical" style="width: 15%"></div></div>
+                            </div>
+                        </td>
+                        <td>R$ 1.550</td>
+                        <td>R$ 2.299</td>
+                        <td><span class="badge-stock badge-lowstock"><i class="bi bi-exclamation-triangle-fill me-1"></i>crítico</span></td>
+                        <td class="action-icons"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i></td>
+                    </tr>
+                    <!-- Linha 5 (produto extra) -->
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="product-img"><i class="bi bi-joystick"></i></div>
+                                <div>
+                                    <span class="fw-semibold">Controle Pro Gamer</span><br>
+                                    <span class="text-secondary small">sem fio / preto</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge-stock">CTL-GM-WL</span></td>
+                        <td>Games</td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="fw-semibold">24 un</span>
+                                <div class="stock-bar"><div class="stock-fill warning" style="width: 40%"></div></div>
+                            </div>
+                        </td>
+                        <td>R$ 212</td>
+                        <td>R$ 379</td>
+                        <td><span class="badge-stock"><i class="bi bi-check-circle-fill text-success me-1"></i>ativo</span></td>
+                        <td class="action-icons"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé da tabela: contagem e paginação -->
+        <div class="footer-info">
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="bi bi-collection me-1"></i> 5 de 238 produtos</span>
+                <span class="text-secondary">|</span>
+                <span><i class="bi bi-arrow-repeat me-1"></i> atualizado há 2 min</span>
+            </div>
+            <div class="pagination-custom">
+                <a href="#" class="page-link-custom"><i class="bi bi-chevron-left"></i></a>
+                <a href="#" class="page-link-custom active">1</a>
+                <a href="#" class="page-link-custom">2</a>
+                <a href="#" class="page-link-custom">3</a>
+                <a href="#" class="page-link-custom">4</a>
+                <a href="#" class="page-link-custom"><i class="bi bi-chevron-right"></i></a>
+            </div>
+        </div>
+
+        <!-- Linha extra: filtros rápidos por letra / categoria -->
+        <div class="d-flex flex-wrap gap-2 mt-4 pt-2">
+            <span class="text-secondary me-2"><i class="bi bi-funnel-fill"></i> Categorias:</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">todos (238)</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">eletrônicos (42)</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">informática (37)</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">áudio (28)</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">games (19)</span>
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">monitores (12)</span>
+            <span class="badge bg-primary text-white px-3 py-2 rounded-pill ms-auto"><i class="bi bi-plus-lg"></i> novo produto</span>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (opcional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
