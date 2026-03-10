@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="PT-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Meu Perfil-SIG-Isaac Masakidi</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+     <link rel="stylesheet" href="css/perfil.css">
+    
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebar">
+            <i class="bi bi-x"></i>
+        </button>
+        
+        <div class="sidebar-header">
+            <div class="logo">
+                
+                <h3>SIG-Isaac Masakidi</h3>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="#" class="active"><i class="bi bi-person-circle"></i>Meu Perfil</a></li>
+                 <li><a href="usuario.html"><i class="bi bi-people"></i>Usuários</a></li>
+                 <li><a href="dasboard.html"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
+                
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <div class="nav-search">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Pesquisar...">
+            </div>
+            
+            <div class="nav-user">
+                <div class="nav-icon">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="nav-icon">
+                    <i class="bi bi-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="headerAvatar">AD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h4><i class="bi bi-person-circle me-2" style="color: #4f9fff;"></i>Meu Perfil</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dasboard.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="usuario.html">Usuários</a></li>
+                        <li class="breadcrumb-item active">Meu Perfil</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <span class="badge-role">
+                    <i class="bi bi-shield-check me-1"></i>Administrador
+                </span>
+            </div>
+        </div>
+
+        <!-- Profile Grid -->
+        <div class="profile-grid">
+            <!-- Coluna da Foto -->
+            <div class="profile-card">
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-placeholder" id="avatarPlaceholder">
+                            AD
+                        </div>
+                        <img src="" alt="Profile" class="profile-avatar" id="profileAvatar" style="display: none;">
+                        
+                        <button class="edit-avatar-btn" onclick="openUploadModal()">
+                            <i class="bi bi-camera-fill"></i>
+                        </button>
+                    </div>
+                    <h5 id="profileName">André Dias</h5>
+                    <p id="profileEmail">andre.dias@stockmaster.com</p>
+                </div>
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <div class="info-label"></div>
+                        <div class="info-value">
+                           
+                            <span id="profileDept"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label"></div>
+                        <div class="info-value">
+                           
+                            <span id="profileDate"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label"></div>
+                        <div class="info-value">
+                           
+                            <span id="profileLastAccess"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Informações -->
+            <div>
+                <!-- Informações Pessoais -->
+                <div class="profile-card mb-4">
+                    <div class="profile-info">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Informações Pessoais</h5>
+                            <button class="btn btn-outline-primary btn-sm" onclick="toggleEditMode()">
+                                <i class="bi bi-pencil-square me-1"></i>Editar
+                            </button>
+                        </div>
+
+                        <!-- Modo Visualização -->
+                        <div id="viewMode">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-label">Nome Completo</div>
+                                    <div class="info-value" id="viewName">André Luiz Dias</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Bilhete de Identidade</div>
+                                    <div class="info-value" id="viewCpf">123.456.789-00</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">E-mail</div>
+                                    <div class="info-value" id="viewEmail">andre.dias@stockmaster.com</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Telefone</div>
+                                    <div class="info-value" id="viewPhone">(11) 98765-4321</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Data Nascimento</div>
+                                    <div class="info-value" id="viewBirth">15/05/1990</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Gênero</div>
+                                    <div class="info-value" id="viewGender">Masculino</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modo Edição -->
+                        <div id="editMode" style="display: none;">
+                            <form id="profileForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nome Completo</label>
+                                        <input type="text" class="form-control" id="editName" value="André Luiz Dias">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Bilhete de Identidade</label>
+                                        <input type="text" class="form-control" id="editCpf" value="123.456.789-00">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="email" class="form-control" id="editEmail" value="andre.dias@stockmaster.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Telefone</label>
+                                        <input type="tel" class="form-control" id="editPhone" value="(11) 98765-4321">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Data Nascimento</label>
+                                        <input type="date" class="form-control" id="editBirth" value="1990-05-15">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Gênero</label>
+                                        <select class="form-select" id="editGender">
+                                            <option selected>Masculino</option>
+                                            <option>Feminino</option>
+                                            <option>Prefiro não informar</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="cancelEdit()">
+                                        Cancelar
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="saveProfile()" id="saveProfileBtn">
+                                        Salvar Alterações
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segurança e Senha -->
+                <div class="security-card">
+                    <div class="security-header">
+                        <i class="bi bi-shield-lock"></i>
+                        <h5 class="mb-0">Segurança e Senha</h5>
+                    </div>
+
+                    <form id="passwordForm" onsubmit="event.preventDefault()">
+                        <div class="form-group">
+                            <label class="form-label">Senha Atual</label>
+                            <input type="password" class="form-control" id="currentPassword" 
+                                   placeholder="Digite sua senha atual">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nova Senha</label>
+                            <input type="password" class="form-control" id="newPassword" 
+                                   placeholder="Digite a nova senha" onkeyup="checkPasswordStrength()">
+                            <div class="password-strength">
+                                <div class="password-strength-bar" id="passwordStrength"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Nova Senha</label>
+                            <input type="password" class="form-control" id="confirmPassword" 
+                                   placeholder="Confirme a nova senha" onkeyup="checkPasswordMatch()">
+                        </div>
+
+                        <!-- Requisitos de Senha -->
+                        <div class="password-requirements">
+                            <p class="mb-2 fw-bold small">Requisitos da senha:</p>
+                            <div class="requirement-item" id="req-length">
+                                <i class="bi bi-x-circle-fill"></i> Mínimo 8 caracteres
+                            </div>
+                            <div class="requirement-item" id="req-number">
+                                <i class="bi bi-x-circle-fill"></i> Pelo menos 1 número
+                            </div>
+                            <div class="requirement-item" id="req-uppercase">
+                                <i class="bi bi-x-circle-fill"></i> Pelo menos 1 letra maiúscula
+                            </div>
+                            <div class="requirement-item" id="req-special">
+                                <i class="bi bi-x-circle-fill"></i> Pelo menos 1 caractere especial
+                            </div>
+                            <div class="requirement-item" id="req-match">
+                                <i class="bi bi-x-circle-fill"></i> Senhas coincidem
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary w-100" onclick="changePassword()" id="changePasswordBtn">
+                            Alterar Senha
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Atividade Recente -->
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h5><i class="bi bi-clock-history me-2"></i>Atividade Recente</h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshActivities()" id="refreshBtn">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </button>
+                    </div>
+
+                    <div class="activity-list" id="activitiesList">
+                        <!-- Atividades serão carregadas aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Upload de Foto -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-camera me-2"></i>Alterar Foto de Perfil
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()" id="uploadArea">
+                        <i class="bi bi-cloud-upload"></i>
+                        <h6>Clique para fazer upload</h6>
+                        <p class="text-muted small">PNG, JPG até 5MB</p>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                    </div>
+                    
+                    <div id="previewContainer" style="display: none; text-align: center;">
+                        <img src="" alt="Preview" class="image-preview" id="imagePreview">
+                        <div class="mt-3">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="resetUpload()">
+                                <i class="bi bi-arrow-repeat"></i> Escolher outra
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="uploadPhoto()" id="uploadBtn">
+                        Salvar Foto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        // ===== CONFIGURAÇÕES =====
+        const API_BASE_URL = 'https://api.stockmaster.com/v1';
+        const USER_ID = 'current';
+
+        // ===== ESTADO GLOBAL =====
+        let currentUser = {
+            id: 1,
+            name: 'André Luiz Dias',
+            email: 'andre.dias@stockmaster.com',
+            cpf: '123.456.789-00',
+            phone: '(11) 98765-4321',
+            birthDate: '1990-05-15',
+            gender: 'Masculino',
+            department: 'Tecnologia da Informação',
+            hireDate: '2026-01-15',
+            avatar: null,
+            initials: 'AD'
+        };
+
+        let activities = [
+            { type: 'login', title: 'Login realizado', time: 'Hoje, 09:45', device: 'Chrome / Windows' },
+            { type: 'password', title: 'Senha alterada', time: '25/02/2026', device: 'Firefox / Windows' },
+            { type: 'profile', title: 'Perfil atualizado', time: '24/02/2026', device: 'Chrome / Android' },
+            { type: 'login', title: 'Login realizado', time: '23/02/2026', device: 'Chrome / Windows' }
+        ];
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadActivities();
+            updateHeaderInfo();
+        });
+
+        // ===== FUNÇÕES DE UTILIDADE =====
+        function showToast(message, type = 'success') {
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                info: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+            };
+
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: colors[type],
+                    borderRadius: "12px",
+                    padding: "12px 20px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+                }
+            }).showToast();
+        }
+
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading-spinner"></span>';
+            } else {
+                button.disabled = false;
+                button.innerHTML = button.getAttribute('data-original-text') || 'Salvar';
+            }
+        }
+
+        // ===== SIDEBAR RESPONSIVA =====
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const menuToggle = document.getElementById('menuToggle');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebarFunc() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', openSidebar);
+        }
+        
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', closeSidebarFunc);
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeSidebarFunc);
+        }
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                closeSidebarFunc();
+            }
+        });
+
+        // ===== FUNÇÕES DE PERFIL =====
+        function toggleEditMode() {
+            document.getElementById('viewMode').style.display = 'none';
+            document.getElementById('editMode').style.display = 'block';
+        }
+
+        function cancelEdit() {
+            document.getElementById('viewMode').style.display = 'block';
+            document.getElementById('editMode').style.display = 'none';
+            
+            // Reset form values
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editCpf').value = currentUser.cpf;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editPhone').value = currentUser.phone;
+            document.getElementById('editBirth').value = currentUser.birthDate;
+            document.getElementById('editGender').value = currentUser.gender;
+        }
+
+        function updateHeaderInfo() {
+            document.getElementById('headerAvatar').textContent = currentUser.initials;
+            document.getElementById('profileName').textContent = currentUser.name.split(' ')[0];
+            document.getElementById('profileEmail').textContent = currentUser.email;
+        }
+
+        async function saveProfile() {
+            const saveBtn = document.getElementById('saveProfileBtn');
+            saveBtn.setAttribute('data-original-text', 'Salvar Alterações');
+            setLoading(saveBtn, true);
+
+            // Validar campos
+            const name = document.getElementById('editName').value;
+            const email = document.getElementById('editEmail').value;
+            const phone = document.getElementById('editPhone').value;
+
+            if (!name || !email) {
+                showToast('Nome e e-mail são obrigatórios', 'error');
+                setLoading(saveBtn, false);
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showToast('E-mail inválido', 'error');
+                setLoading(saveBtn, false);
+                return;
+            }
+
+            try {
+                // Simular requisição ao backend
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Atualizar dados locais
+                currentUser = {
+                    ...currentUser,
+                    name: name,
+                    cpf: document.getElementById('editCpf').value,
+                    email: email,
+                    phone: phone,
+                    birthDate: document.getElementById('editBirth').value,
+                    gender: document.getElementById('editGender').value
+                };
+
+                // Atualizar interface
+                document.getElementById('viewName').textContent = name;
+                document.getElementById('viewCpf').textContent = currentUser.cpf;
+                document.getElementById('viewEmail').textContent = email;
+                document.getElementById('viewPhone').textContent = phone;
+                
+                // Formatar data para exibição
+                const birthDate = new Date(currentUser.birthDate);
+                const formattedDate = birthDate.toLocaleDateString('pt-BR');
+                document.getElementById('viewBirth').textContent = formattedDate;
+                
+                document.getElementById('viewGender').textContent = currentUser.gender;
+                
+                // Atualizar header
+                updateHeaderInfo();
+
+                // Voltar para modo visualização
+                cancelEdit();
+                
+                showToast('Perfil atualizado com sucesso!', 'success');
+
+                // Adicionar atividade
+                const newActivity = {
+                    type: 'profile',
+                    title: 'Perfil atualizado',
+                    time: 'Agora mesmo',
+                    device: 'Web'
+                };
+                activities.unshift(newActivity);
+                loadActivities();
+
+            } catch (error) {
+                showToast('Erro ao atualizar perfil', 'error');
+            } finally {
+                setLoading(saveBtn, false);
+            }
+        }
+
+        // ===== FUNÇÕES DE SENHA =====
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            
+            // Remover todas as classes de força
+            strengthBar.className = 'password-strength-bar';
+            
+            // Verificar força
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 10) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            // Aplicar classe baseada na força
+            if (password.length === 0) {
+                strengthBar.style.width = '0';
+            } else if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('strength-medium');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+            
+            // Atualizar requisitos
+            updateRequirement('req-length', password.length >= 8);
+            updateRequirement('req-number', /[0-9]/.test(password));
+            updateRequirement('req-uppercase', /[A-Z]/.test(password));
+            updateRequirement('req-special', /[^a-zA-Z0-9]/.test(password));
+            
+            checkPasswordMatch();
+        }
+
+        function checkPasswordMatch() {
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const matchReq = document.getElementById('req-match');
+            
+            if (confirmPass.length > 0) {
+                if (newPass === confirmPass) {
+                    matchReq.className = 'requirement-item valid';
+                    matchReq.innerHTML = '<i class="bi bi-check-circle-fill"></i> Senhas coincidem';
+                } else {
+                    matchReq.className = 'requirement-item invalid';
+                    matchReq.innerHTML = '<i class="bi bi-x-circle-fill"></i> Senhas não coincidem';
+                }
+            } else {
+                matchReq.className = 'requirement-item invalid';
+                matchReq.innerHTML = '<i class="bi bi-x-circle-fill"></i> Senhas coincidem';
+            }
+        }
+
+        function updateRequirement(elementId, isValid) {
+            const element = document.getElementById(elementId);
+            if (isValid) {
+                element.className = 'requirement-item valid';
+                element.innerHTML = element.innerHTML.replace('bi-x-circle-fill', 'bi-check-circle-fill');
+            } else {
+                element.className = 'requirement-item invalid';
+                element.innerHTML = element.innerHTML.replace('bi-check-circle-fill', 'bi-x-circle-fill');
+            }
+        }
+
+        async function changePassword() {
+            const btn = document.getElementById('changePasswordBtn');
+            btn.setAttribute('data-original-text', 'Alterar Senha');
+            setLoading(btn, true);
+
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            // Validações
+            if (!currentPass) {
+                showToast('Digite sua senha atual', 'error');
+                setLoading(btn, false);
+                return;
+            }
+
+            if (newPass.length < 8) {
+                showToast('A nova senha deve ter no mínimo 8 caracteres', 'error');
+                setLoading(btn, false);
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showToast('As senhas não coincidem', 'error');
+                setLoading(btn, false);
+                return;
+            }
+
+            try {
+                // Simular requisição ao backend
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Limpar campos
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                // Resetar força da senha
+                document.getElementById('passwordStrength').style.width = '0';
+                
+                showToast('Senha alterada com sucesso!', 'success');
+
+                // Adicionar atividade
+                const newActivity = {
+                    type: 'password',
+                    title: 'Senha alterada',
+                    time: 'Agora mesmo',
+                    device: 'Web'
+                };
+                activities.unshift(newActivity);
+                loadActivities();
+
+            } catch (error) {
+                showToast('Erro ao alterar senha', 'error');
+            } finally {
+                setLoading(btn, false);
+            }
+        }
+
+        // ===== FUNÇÕES DE ATIVIDADE =====
+        function loadActivities() {
+            const activitiesList = document.getElementById('activitiesList');
+            activitiesList.innerHTML = '';
+
+            activities.slice(0, 4).forEach(activity => {
+                const icon = getActivityIcon(activity.type);
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon ${icon.class}">
+                        <i class="${icon.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                        <div class="activity-device">${activity.device}</div>
+                    </div>
+                `;
+                activitiesList.appendChild(item);
+            });
+        }
+
+        function getActivityIcon(type) {
+            switch(type) {
+                case 'login':
+                    return { class: 'login', icon: 'bi bi-box-arrow-in-right' };
+                case 'password':
+                    return { class: 'password', icon: 'bi bi-key' };
+                case 'profile':
+                    return { class: 'profile', icon: 'bi bi-person' };
+                default:
+                    return { class: 'login', icon: 'bi bi-clock-history' };
+            }
+        }
+
+        function refreshActivities() {
+            const btn = document.getElementById('refreshBtn');
+            btn.innerHTML = '<i class="bi bi-arrow-repeat spinning"></i>';
+            
+            setTimeout(() => {
+                loadActivities();
+                btn.innerHTML = '<i class="bi bi-arrow-repeat"></i>';
+                showToast('Atividades atualizadas', 'success');
+            }, 500);
+        }
+
+        // ===== FUNÇÕES DE UPLOAD =====
+        let uploadModal = null;
+
+        function openUploadModal() {
+            uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+            uploadModal.show();
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('previewContainer').style.display = 'block';
+                    document.getElementById('uploadArea').style.display = 'none';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetUpload() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('imagePreview').src = '';
+        }
+
+        async function uploadPhoto() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            if (!fileInput.files || !fileInput.files[0]) {
+                showToast('Selecione uma imagem', 'error');
+                return;
+            }
+
+            uploadBtn.setAttribute('data-original-text', 'Salvar Foto');
+            setLoading(uploadBtn, true);
+
+            const file = fileInput.files[0];
+            
+            // Validar tipo de arquivo
+            if (!file.type.match('image.*')) {
+                showToast('Por favor, selecione apenas imagens', 'error');
+                setLoading(uploadBtn, false);
+                return;
+            }
+
+            // Validar tamanho (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('A imagem deve ter no máximo 5MB', 'error');
+                setLoading(uploadBtn, false);
+                return;
+            }
+
+            try {
+                // Simular upload
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Atualizar avatar
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    document.getElementById('profileAvatar').style.display = 'block';
+                    document.getElementById('avatarPlaceholder').style.display = 'none';
+                    
+                    // Fechar modal
+                    if (uploadModal) {
+                        uploadModal.hide();
+                    }
+                    
+                    showToast('Foto atualizada com sucesso!', 'success');
+                    
+                    // Adicionar atividade
+                    const newActivity = {
+                        type: 'profile',
+                        title: 'Foto de perfil atualizada',
+                        time: 'Agora mesmo',
+                        device: 'Web'
+                    };
+                    activities.unshift(newActivity);
+                    loadActivities();
+                }
+                reader.readAsDataURL(file);
+
+            } catch (error) {
+                showToast('Erro ao fazer upload da imagem', 'error');
+            } finally {
+                setLoading(uploadBtn, false);
+                resetUpload();
+            }
+        }
+
+        // Adicionar CSS para animação de spinning
+        const style = document.createElement('style');
+        style.textContent = `
+            .spinning {
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
