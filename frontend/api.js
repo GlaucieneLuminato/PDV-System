@@ -1,11 +1,15 @@
-const API_URL = "https://127.0.0.1:8000/api/produtos/";
+const API_URL = "http://127.0.0.1:8000/api/produtos/";
+
+let carrinho = [];
 
 async function carregarProdutos(){
     try{
         const resposta = await fetch(API_URL);
         const produtos = await resposta.json();
+        console.log(produtos);
+        console.log("API conectada BABY!!");
 
-        const tabela = document.querySelector("tbody");
+        const tabela = document.querySelector("#tabela-produtos");
         tabela.innerHTML = "";
 
         produtos.forEach(produto => {
@@ -18,14 +22,24 @@ async function carregarProdutos(){
                 <td>-</td>
                 <td>R$ ${produto.preco}</td>
                 <td>ativo</td>
-                <td></td>
+                <td>
+                <button onClick="adicionarCarrinho(${produto.id})" style="border:none;background:none">
+                <i class="bi bi-cart-plus"></i>
+                </button>
+                </td>
             </tr>
             `;
             tabela.innerHTML  += linha
         });
     } catch(erro){
-        console.erro("Erro ao carregar produto:", erro);
+        console.error("Erro ao carregar produto:", erro);
     }
 }
 
+function adicionarCarrinho(id){
+    carrinho.push(id);
+    console.log("Carrinho:",carrinho);
+}
+
 carregarProdutos();
+

@@ -4,8 +4,12 @@ from decimal import Decimal
 
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
+    sku = models.CharField(max_length=50)
+    categoria = models.CharField(max_length=100, default = "Eletrônicos")
+    preco_custo = models.DecimalField(max_digits=10, decimal_places = 2, default = 0)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     estoque = models.IntegerField()
+    status = models.BooleanField(default=True)
     criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -15,13 +19,13 @@ class Venda(models.Model):
   data_venda = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
-        return f"Venda #{self.id}"
+     return f"Venda #{self.id}"
 
   def total(self):
     total = Decimal("0.00")
     for item in self.itens.all():
         total += item.subtotal()
-        return total
+    return total
   total.short_description = "Total"
     
 class ItemVenda(models.Model):
@@ -33,8 +37,9 @@ class ItemVenda(models.Model):
      if self.quantidade > self.produto.estoque:
         raise ValidationError("Estoque insuficiente para este item.")
 
+    
     def subtotal(self):
-        return self.quantidade * self.preco_unitario
+                    return self.quantidade * self.preco_unitario
             
     def save(self,*args,**kwargs):
                 self.full_clean()
@@ -53,12 +58,6 @@ class ItemVenda(models.Model):
                     self.produto.estoque += self.quantidade
                     self.produto.save()
                     super().delete(*args,**kwargs)
-    def __str__(self):
-                    return f"{self.produto.nome} - {self.quantidade}"
-
-
-    def subtotal(self):
-                    return self.quantidade * self.preco_unitario
                     
     def __str__(self):
                     return f"{self.produto.nome} - {self.quantidade}"
