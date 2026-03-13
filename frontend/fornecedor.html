@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>StockMaster - Gestão de Fornecedores</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="css/fornecedor.css">
+    
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebar">
+            <i class="bi bi-x"></i>
+        </button>
+        
+        <div class="sidebar-header">
+            <div class="logo">
+               
+                <h3>SIG-Isaac Masakidi</h3>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="dasboard.html"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <li><a href="produtos.html"><i class="bi bi-box"></i>Produtos</a></li>
+                <li><a href="#" class="active"><i class="bi bi-truck"></i>Fornecedores</a></li>
+                <li><a href="#"><i class="bi bi-cart"></i>Vendas</a></li>
+                <li><a href="#"><i class="bi bi-people"></i>Usuários</a></li>
+                <li><a href="#"><i class="bi bi-person-circle"></i>Meu Perfil</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <div class="nav-search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchInput" placeholder="Pesquisar fornecedores..." onkeyup="filterSuppliers()">
+            </div>
+            
+            <div class="nav-user">
+                <div class="nav-icon">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="nav-icon">
+                    <i class="bi bi-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">AD</div>
+                    <div class="user-details">
+                        <strong>André Dias</strong>
+                        <small>Administrador</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h4><i class="bi bi-truck me-2" style="color: #4f9fff;"></i>Gestão de Fornecedores</h4>
+                <p class="text-muted mb-0">Gerencie todos os fornecedores do sistema</p>
+            </div>
+            <div>
+                <button class="btn-outline-primary me-2" onclick="exportSuppliers()">
+                    <i class="bi bi-download me-1"></i>Exportar
+                </button>
+                <button class="btn-primary" onclick="openSupplierModal()">
+                    <i class="bi bi-plus-circle me-1"></i>Novo Fornecedor
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stats-card">
+                <div class="stats-icon blue">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 id="totalSuppliers">0</h3>
+                    <p>Total de Fornecedores</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-icon green">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 id="activeSuppliers">0</h3>
+                    <p>Fornecedores Ativos</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-icon yellow">
+                    <i class="bi bi-star"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 id="topSuppliers">0</h3>
+                    <p>Fornecedores Top</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-icon purple">
+                    <i class="bi bi-box"></i>
+                </div>
+                <div class="stats-info">
+                    <h3 id="totalProducts">0</h3>
+                    <p>Produtos Fornecidos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <i class="bi bi-funnel"></i>
+                <select id="statusFilter" onchange="filterSuppliers()">
+                    <option value="">Todos os Status</option>
+                    <option value="active">Ativos</option>
+                    <option value="inactive">Inativos</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <i class="bi bi-star"></i>
+                <select id="ratingFilter" onchange="filterSuppliers()">
+                    <option value="">Todas as Classificações</option>
+                    <option value="5">5 Estrelas</option>
+                    <option value="4">4+ Estrelas</option>
+                    <option value="3">3+ Estrelas</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <i class="bi bi-geo-alt"></i>
+                <select id="countryFilter" onchange="filterSuppliers()">
+                    <option value="">Todos os Países</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabela de Fornecedores -->
+        <div class="suppliers-table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fornecedor</th>
+                        <th>Contacto</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>País</th>
+                        <th>Classificação</th>
+                        <th>Produtos</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="suppliersTableBody">
+                    <!-- Dados serão carregados via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Modal de Fornecedor (Cadastro/Edição) -->
+    <div class="modal fade" id="supplierModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        <i class="bi bi-truck"></i>
+                        <span id="modalTitleText">Novo Fornecedor</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="supplierForm">
+                        <!-- Informações Básicas -->
+                        <h6 class="fw-bold mb-3">Informações Básicas</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Nome da Empresa *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                    <input type="text" class="form-control" id="companyName" placeholder="Ex: Dell Computadores" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Nome do Contacto *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="contactName" placeholder="Ex: João Silva" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">NIF / CNPJ *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control" id="taxId" placeholder="Ex: 123456789" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Website</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-globe"></i></span>
+                                    <input type="url" class="form-control" id="website" placeholder="https://www.exemplo.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contactos -->
+                        <h6 class="fw-bold mb-3">Contactos</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Email *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" placeholder="contacto@empresa.com" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Telefone *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" class="form-control" id="phone" placeholder="+351 123 456 789" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Telefone Alternativo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" class="form-control" id="alternativePhone" placeholder="+351 987 654 321">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">WhatsApp</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
+                                    <input type="tel" class="form-control" id="whatsapp" placeholder="+351 123 456 789">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereço -->
+                        <h6 class="fw-bold mb-3">Endereço</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label class="form-label">Endereço</label>
+                                <input type="text" class="form-control" id="address" placeholder="Rua, Número, Bairro">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Cidade</label>
+                                <input type="text" class="form-control" id="city" placeholder="Cidade">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Estado/Província</label>
+                                <input type="text" class="form-control" id="state" placeholder="Estado">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Código Postal</label>
+                                <input type="text" class="form-control" id="zipCode" placeholder="0000-000">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">País</label>
+                                <select class="form-select" id="country">
+                                    <option value="">Selecione o país</option>
+                                    <option value="Portugal" selected>Portugal</option>
+                                    <option value="Espanha">Espanha</option>
+                                    <option value="França">França</option>
+                                    <option value="Alemanha">Alemanha</option>
+                                    <option value="Itália">Itália</option>
+                                    <option value="Reino Unido">Reino Unido</option>
+                                    <option value="Estados Unidos">Estados Unidos</option>
+                                    <option value="Brasil">Brasil</option>
+                                    <option value="China">China</option>
+                                    <option value="Japão">Japão</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Informações Comerciais -->
+                        <h6 class="fw-bold mb-3">Informações Comerciais</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Classificação</label>
+                                <select class="form-select" id="rating">
+                                    <option value="5">5 Estrelas - Excelente</option>
+                                    <option value="4">4 Estrelas - Bom</option>
+                                    <option value="3">3 Estrelas - Regular</option>
+                                    <option value="2">2 Estrelas - Ruim</option>
+                                    <option value="1">1 Estrela - Péssimo</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Prazo de Entrega (dias)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="deliveryTime" value="7" min="1">
+                                    <span class="input-group-text">dias</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Condições de Pagamento</label>
+                                <select class="form-select" id="paymentTerms">
+                                    <option value="30">30 dias</option>
+                                    <option value="60">60 dias</option>
+                                    <option value="90">90 dias</option>
+                                    <option value="advance">Pagamento antecipado</option>
+                                    <option value="delivery">Pagamento na entrega</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria de Produtos</label>
+                                <select class="form-select" id="productCategory" multiple size="3">
+                                    <option value="Eletrônicos">Eletrônicos</option>
+                                    <option value="Periféricos">Periféricos</option>
+                                    <option value="Smartphones">Smartphones</option>
+                                    <option value="Acessórios">Acessórios</option>
+                                    <option value="Informática">Informática</option>
+                                    <option value="Áudio">Áudio</option>
+                                    <option value="Vídeo">Vídeo</option>
+                                    <option value="Games">Games</option>
+                                </select>
+                                <small class="text-muted">Segure Ctrl para selecionar múltiplas</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="notes" rows="3" placeholder="Observações sobre o fornecedor..."></textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="supplierStatus" checked>
+                                    <label class="form-check-label" for="supplierStatus">Fornecedor Ativo</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="preferredSupplier">
+                                    <label class="form-check-label" for="preferredSupplier">Fornecedor Preferencial</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSupplier()" id="saveSupplierBtn">
+                        Salvar Fornecedor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Fornecedor -->
+    <div class="modal fade" id="supplierDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-truck"></i>
+                        Detalhes do Fornecedor
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="supplierDetailContent">
+                    <!-- Conteúdo carregado via JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" onclick="editCurrentSupplier()" id="editSupplierBtn">
+                        <i class="bi bi-pencil me-1"></i>Editar Fornecedor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        // ===== VARIÁVEIS GLOBAIS =====
+        let suppliers = [];
+        let products = [];
+        let filteredSuppliers = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let currentSupplierId = null;
+        let supplierModal = null;
+        let supplierDetailModal = null;
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSuppliers();
+            loadProducts();
+            setupSidebar();
+            supplierModal = new bootstrap.Modal(document.getElementById('supplierModal'));
+            supplierDetailModal = new bootstrap.Modal(document.getElementById('supplierDetailModal'));
+        });
+
+        // ===== SIDEBAR =====
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.add('open');
+                    overlay.classList.add('active');
+                });
+            }
+
+            if (closeSidebar) {
+                closeSidebar.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
+        }
+
+        // ===== CARREGAR DADOS =====
+        function loadSuppliers() {
+            const storedSuppliers = localStorage.getItem('suppliers');
+            suppliers = storedSuppliers ? JSON.parse(storedSuppliers) : [];
+            filteredSuppliers = [...suppliers];
+            
+            updateFilters();
+            updateStats();
+            renderSuppliers();
+        }
+
+        function loadProducts() {
+            const storedProducts = localStorage.getItem('products');
+            products = storedProducts ? JSON.parse(storedProducts) : [];
+        }
+
+        // ===== ATUALIZAR FILTROS =====
+        function updateFilters() {
+            // Países
+            const countries = [...new Set(suppliers.map(s => s.country).filter(Boolean))];
+            const countryFilter = document.getElementById('countryFilter');
+            countryFilter.innerHTML = '<option value="">Todos os Países</option>';
+            countries.forEach(country => {
+                countryFilter.innerHTML += `<option value="${country}">${country}</option>`;
+            });
+        }
+
+        // ===== ATUALIZAR STATS =====
+        function updateStats() {
+            const total = suppliers.length;
+            const active = suppliers.filter(s => s.status === 'active').length;
+            const topSuppliers = suppliers.filter(s => s.rating >= 4).length;
+            
+            // Calcular total de produtos fornecidos
+            const supplierIds = suppliers.map(s => s.id);
+            const totalProducts = products.filter(p => supplierIds.includes(p.supplierId)).length;
+
+            document.getElementById('totalSuppliers').textContent = total;
+            document.getElementById('activeSuppliers').textContent = active;
+            document.getElementById('topSuppliers').textContent = topSuppliers;
+            document.getElementById('totalProducts').textContent = totalProducts;
+        }
+
+        // ===== FILTRAR FORNECEDORES =====
+        function filterSuppliers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const rating = document.getElementById('ratingFilter').value;
+            const country = document.getElementById('countryFilter').value;
+
+            filteredSuppliers = suppliers.filter(supplier => {
+                const matchesSearch = supplier.companyName.toLowerCase().includes(searchTerm) || 
+                                    supplier.contactName.toLowerCase().includes(searchTerm) ||
+                                    supplier.email.toLowerCase().includes(searchTerm);
+                const matchesStatus = !status || supplier.status === status;
+                const matchesRating = !rating || supplier.rating >= parseInt(rating);
+                const matchesCountry = !country || supplier.country === country;
+                
+                return matchesSearch && matchesStatus && matchesRating && matchesCountry;
+            });
+
+            currentPage = 1;
+            renderSuppliers();
+        }
+
+        // ===== RENDERIZAR FORNECEDORES =====
+        function renderSuppliers() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedSuppliers = filteredSuppliers.slice(start, end);
+
+            const tbody = document.getElementById('suppliersTableBody');
+            
+            if (filteredSuppliers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center py-4">
+                            <div class="empty-state-small">
+                                <i class="bi bi-truck" style="font-size: 40px;"></i>
+                                <p class="mt-2">Nenhum fornecedor encontrado</p>
+                                <button class="btn-primary btn-sm" onclick="openSupplierModal()">
+                                    <i class="bi bi-plus-circle me-1"></i>Adicionar Fornecedor
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            paginatedSuppliers.forEach(supplier => {
+                const ratingStars = getRatingStars(supplier.rating);
+                const statusClass = supplier.status === 'active' ? 'status-active' : 'status-inactive';
+                const statusText = supplier.status === 'active' ? 'Ativo' : 'Inativo';
+                
+                // Contar produtos deste fornecedor
+                const supplierProducts = products.filter(p => p.supplierId === supplier.id).length;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="supplier-cell">
+                            <div class="supplier-avatar">${getInitials(supplier.companyName)}</div>
+                            <div class="supplier-info">
+                                <div class="supplier-name">${supplier.companyName}</div>
+                                <div class="supplier-contact">${supplier.contactName}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${supplier.contactName}</td>
+                    <td>${supplier.email}</td>
+                    <td>${supplier.phone}</td>
+                    <td>${supplier.country || '-'}</td>
+                    <td>
+                        <div class="rating">
+                            ${ratingStars}
+                            <span class="rating-value">${supplier.rating}.0</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="products-count">${supplierProducts} produtos</span>
+                    </td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="table-action-btn" onclick="viewSupplier(${supplier.id})" title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="table-action-btn edit" onclick="editSupplier(${supplier.id})" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="table-action-btn delete" onclick="deleteSupplier(${supplier.id})" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredSuppliers.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Botão anterior
+            const prevBtn = document.createElement('div');
+            prevBtn.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderSuppliers();
+                }
+            };
+            pagination.appendChild(prevBtn);
+
+            // Páginas
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('div');
+                pageBtn.className = `page-item ${currentPage === i ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    renderSuppliers();
+                };
+                pagination.appendChild(pageBtn);
+            }
+
+            // Botão próximo
+            const nextBtn = document.createElement('div');
+            nextBtn.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderSuppliers();
+                }
+            };
+            pagination.appendChild(nextBtn);
+        }
+
+        // ===== FUNÇÕES AUXILIARES =====
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        }
+
+        function getRatingStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="bi bi-star-fill"></i>';
+                } else {
+                    stars += '<i class="bi bi-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        // ===== MODAL DE FORNECEDOR =====
+        function openSupplierModal() {
+            currentSupplierId = null;
+            document.getElementById('modalTitleText').textContent = 'Novo Fornecedor';
+            document.getElementById('supplierForm').reset();
+            
+            // Valores padrão
+            document.getElementById('rating').value = '4';
+            document.getElementById('deliveryTime').value = '7';
+            document.getElementById('supplierStatus').checked = true;
+            
+            supplierModal.show();
+        }
+
+        function editSupplier(id) {
+            const supplier = suppliers.find(s => s.id === id);
+            if (!supplier) return;
+
+            currentSupplierId = id;
+            document.getElementById('modalTitleText').textContent = 'Editar Fornecedor';
+            
+            // Preencher formulário
+            document.getElementById('companyName').value = supplier.companyName || '';
+            document.getElementById('contactName').value = supplier.contactName || '';
+            document.getElementById('taxId').value = supplier.taxId || '';
+            document.getElementById('website').value = supplier.website || '';
+            document.getElementById('email').value = supplier.email || '';
+            document.getElementById('phone').value = supplier.phone || '';
+            document.getElementById('alternativePhone').value = supplier.alternativePhone || '';
+            document.getElementById('whatsapp').value = supplier.whatsapp || '';
+            document.getElementById('address').value = supplier.address || '';
+            document.getElementById('city').value = supplier.city || '';
+            document.getElementById('state').value = supplier.state || '';
+            document.getElementById('zipCode').value = supplier.zipCode || '';
+            document.getElementById('country').value = supplier.country || 'Portugal';
+            document.getElementById('rating').value = supplier.rating || '4';
+            document.getElementById('deliveryTime').value = supplier.deliveryTime || '7';
+            document.getElementById('paymentTerms').value = supplier.paymentTerms || '30';
+            
+            // Categorias (multiple select)
+            if (supplier.categories) {
+                const select = document.getElementById('productCategory');
+                const options = select.options;
+                for (let i = 0; i < options.length; i++) {
+                    options[i].selected = supplier.categories.includes(options[i].value);
+                }
+            }
+            
+            document.getElementById('notes').value = supplier.notes || '';
+            document.getElementById('supplierStatus').checked = supplier.status !== 'inactive';
+            document.getElementById('preferredSupplier').checked = supplier.preferred || false;
+            
+            supplierModal.show();
+        }
+
+        function saveSupplier() {
+            const saveBtn = document.getElementById('saveSupplierBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<span class="loading-spinner"></span>';
+            saveBtn.disabled = true;
+
+            // Validar campos obrigatórios
+            const companyName = document.getElementById('companyName').value;
+            const contactName = document.getElementById('contactName').value;
+            const taxId = document.getElementById('taxId').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!companyName || !contactName || !taxId || !email || !phone) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+                return;
+            }
+
+            // Validar email
+            if (!email.includes('@')) {
+                showToast('Email inválido', 'error');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+                return;
+            }
+
+            // Recolher categorias selecionadas
+            const categoriesSelect = document.getElementById('productCategory');
+            const categories = [];
+            for (let i = 0; i < categoriesSelect.options.length; i++) {
+                if (categoriesSelect.options[i].selected) {
+                    categories.push(categoriesSelect.options[i].value);
+                }
+            }
+
+            // Criar objeto do fornecedor
+            const supplier = {
+                id: currentSupplierId || Date.now(),
+                companyName: companyName,
+                contactName: contactName,
+                taxId: taxId,
+                website: document.getElementById('website').value,
+                email: email,
+                phone: phone,
+                alternativePhone: document.getElementById('alternativePhone').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                zipCode: document.getElementById('zipCode').value,
+                country: document.getElementById('country').value,
+                rating: parseInt(document.getElementById('rating').value),
+                deliveryTime: parseInt(document.getElementById('deliveryTime').value),
+                paymentTerms: document.getElementById('paymentTerms').value,
+                categories: categories,
+                notes: document.getElementById('notes').value,
+                status: document.getElementById('supplierStatus').checked ? 'active' : 'inactive',
+                preferred: document.getElementById('preferredSupplier').checked,
+                createdAt: currentSupplierId ? null : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Simular salvamento
+            setTimeout(() => {
+                if (currentSupplierId) {
+                    // Atualizar existente
+                    const index = suppliers.findIndex(s => s.id === currentSupplierId);
+                    if (index !== -1) {
+                        suppliers[index] = { ...suppliers[index], ...supplier };
+                    }
+                    showToast('Fornecedor atualizado com sucesso!', 'success');
+                } else {
+                    // Adicionar novo
+                    suppliers.push(supplier);
+                    showToast('Fornecedor cadastrado com sucesso!', 'success');
+                }
+
+                // Salvar no localStorage
+                localStorage.setItem('suppliers', JSON.stringify(suppliers));
+                
+                // Atualizar interface
+                filteredSuppliers = [...suppliers];
+                updateFilters();
+                updateStats();
+                renderSuppliers();
+                
+                // Fechar modal
+                supplierModal.hide();
+                
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }, 1000);
+        }
+
+        // ===== VISUALIZAR FORNECEDOR =====
+        function viewSupplier(id) {
+            const supplier = suppliers.find(s => s.id === id);
+            if (!supplier) return;
+
+            currentSupplierId = id;
+
+            // Encontrar produtos deste fornecedor
+            const supplierProducts = products.filter(p => p.supplierId === id);
+
+            // Formatar data
+            const createdAt = supplier.createdAt ? new Date(supplier.createdAt).toLocaleDateString('pt-BR') : 'N/A';
+            const updatedAt = supplier.updatedAt ? new Date(supplier.updatedAt).toLocaleDateString('pt-BR') : 'N/A';
+
+            // Montar lista de produtos
+            let productsHtml = '';
+            if (supplierProducts.length > 0) {
+                productsHtml = '<div class="products-list">';
+                supplierProducts.forEach(product => {
+                    productsHtml += `
+                        <div class="product-item">
+                            <span class="product-item-name">${product.name}</span>
+                            <span class="product-item-price">€${product.salePrice.toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+                productsHtml += '</div>';
+            } else {
+                productsHtml = '<p class="text-muted">Nenhum produto cadastrado</p>';
+            }
+
+            const ratingStars = getRatingStars(supplier.rating);
+
+            const content = `
+                <div class="detail-row">
+                    <div class="detail-label">Empresa</div>
+                    <div class="detail-value highlight">${supplier.companyName}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Contacto</div>
+                    <div class="detail-value">${supplier.contactName}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">NIF/CNPJ</div>
+                    <div class="detail-value">${supplier.taxId}</div>
+                </div>
+                
+                ${supplier.website ? `
+                <div class="detail-row">
+                    <div class="detail-label">Website</div>
+                    <div class="detail-value"><a href="${supplier.website}" target="_blank">${supplier.website}</a></div>
+                </div>
+                ` : ''}
+                
+                <div class="detail-row">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">${supplier.email}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Telefone</div>
+                    <div class="detail-value">${supplier.phone}</div>
+                </div>
+                
+                ${supplier.alternativePhone ? `
+                <div class="detail-row">
+                    <div class="detail-label">Tel. Alternativo</div>
+                    <div class="detail-value">${supplier.alternativePhone}</div>
+                </div>
+                ` : ''}
+                
+                ${supplier.whatsapp ? `
+                <div class="detail-row">
+                    <div class="detail-label">WhatsApp</div>
+                    <div class="detail-value">${supplier.whatsapp}</div>
+                </div>
+                ` : ''}
+                
+                ${supplier.address ? `
+                <div class="detail-row">
+                    <div class="detail-label">Endereço</div>
+                    <div class="detail-value">
+                        ${supplier.address}<br>
+                        ${supplier.city ? supplier.city + ', ' : ''}${supplier.state ? supplier.state + ' ' : ''}${supplier.zipCode || ''}<br>
+                        ${supplier.country || ''}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="detail-row">
+                    <div class="detail-label">Classificação</div>
+                    <div class="detail-value">
+                        <div class="rating">
+                            ${ratingStars}
+                            <span class="rating-value">${supplier.rating}.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Prazo de Entrega</div>
+                    <div class="detail-value">${supplier.deliveryTime} dias</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Condições</div>
+                    <div class="detail-value">${supplier.paymentTerms} dias</div>
+                </div>
+                
+                ${supplier.categories && supplier.categories.length > 0 ? `
+                <div class="detail-row">
+                    <div class="detail-label">Categorias</div>
+                    <div class="detail-value">${supplier.categories.join(', ')}</div>
+                </div>
+                ` : ''}
+                
+                <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="status-badge ${supplier.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${supplier.status === 'active' ? 'Ativo' : 'Inativo'}
+                        </span>
+                        ${supplier.preferred ? '<span class="status-badge status-active ms-2">Preferencial</span>' : ''}
+                    </div>
+                </div>
+                
+                ${supplier.notes ? `
+                <div class="detail-row">
+                    <div class="detail-label">Observações</div>
+                    <div class="detail-value">${supplier.notes}</div>
+                </div>
+                ` : ''}
+                
+                <div class="detail-row">
+                    <div class="detail-label">Produtos</div>
+                    <div class="detail-value">
+                        ${supplierProducts.length} produtos fornecidos
+                        ${productsHtml}
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Registro</div>
+                    <div class="detail-value">
+                        <small>Criado em: ${createdAt}</small><br>
+                        <small>Atualizado em: ${updatedAt}</small>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('supplierDetailContent').innerHTML = content;
+            supplierDetailModal.show();
+        }
+
+        function editCurrentSupplier() {
+            if (currentSupplierId) {
+                supplierDetailModal.hide();
+                editSupplier(currentSupplierId);
+            }
+        }
+
+        // ===== EXCLUIR FORNECEDOR =====
+        function deleteSupplier(id) {
+            if (confirm('Tem certeza que deseja excluir este fornecedor?')) {
+                // Verificar se existem produtos vinculados
+                const hasProducts = products.some(p => p.supplierId === id);
+                
+                if (hasProducts) {
+                    if (!confirm('Este fornecedor possui produtos vinculados. Deseja realmente excluí-lo?')) {
+                        return;
+                    }
+                }
+
+                suppliers = suppliers.filter(s => s.id !== id);
+                localStorage.setItem('suppliers', JSON.stringify(suppliers));
+                
+                filteredSuppliers = [...suppliers];
+                updateStats();
+                renderSuppliers();
+                
+                showToast('Fornecedor excluído com sucesso!', 'success');
+            }
+        }
+
+        // ===== EXPORTAR =====
+        function exportSuppliers() {
+            const data = filteredSuppliers.map(s => ({
+                Empresa: s.companyName,
+                Contacto: s.contactName,
+                'NIF/CNPJ': s.taxId,
+                Email: s.email,
+                Telefone: s.phone,
+                País: s.country,
+                Classificação: s.rating + ' estrelas',
+                Status: s.status === 'active' ? 'Ativo' : 'Inativo',
+                'Preferencial': s.preferred ? 'Sim' : 'Não'
+            }));
+
+            const csv = convertToCSV(data);
+            downloadCSV(csv, 'fornecedores.csv');
+            showToast('Fornecedores exportados com sucesso!', 'success');
+        }
+
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+            const header = Object.keys(data[0]).join(',');
+            const rows = data.map(obj => Object.values(obj).map(value => 
+                typeof value === 'string' && value.includes(',') ? `"${value}"` : value
+            ).join(','));
+            return [header, ...rows].join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'success') {
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                info: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+            };
+
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: colors[type],
+                    borderRadius: "12px",
+                    padding: "12px 20px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+                }
+            }).showToast();
+        }
+    </script>
+</body>
+</html>
