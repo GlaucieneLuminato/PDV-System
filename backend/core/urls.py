@@ -11,5 +11,5 @@ router.register(r'itens',ItemVendaViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
-    path("dashboard/", dashboard, name="dashboard"),
+    path("dashboard/", dashboard, name="dashboard"), 
 ]
