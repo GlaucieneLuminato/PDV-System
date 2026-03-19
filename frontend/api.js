@@ -1,5 +1,48 @@
 const API_URL = "http://127.0.0.1:8000/api/produtos/"
 
+function abrirModalProduto(){
+    const modal = new
+    bootstrap.Modal(document.getElementById('productModal'));
+    modal.show();
+}
+
+
+async function criarProduto(produto){
+    try{
+        const resposta = await
+        fetch(API_URL, {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(produto)
+        });
+
+        if(!resposta.ok){
+          console.error("ERRO DO DJANGO:",data);
+          return;
+        }
+       
+        console.log("produto Criado:", data);
+
+        carregarProdutos();
+    } catch(error){
+        console.error("Erro:",error)
+    }
+}
+
+function salvarProduto(){
+    console.log("CLIQUEI EM SALVAR");
+
+    const produto = {
+        nome:document.getElementById("nome").value,
+        preco_custo:document.getElementById("preco_custo").value,
+        preco_venda:document.getElementById("preco_venda").value,
+        estoque:document.getElementById("estoque").value,
+    };
+    criarProduto(produto);
+}
+
 async function carregarProdutos(){
     try{
         const container = document.querySelector("#tabela-produtos");
