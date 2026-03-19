@@ -184,3 +184,42 @@ Hoje foi resolvido um problema de:
 ✨ PRÓXIMO PASSO
 
 Continuar evolução visual + lógica de negócio no frontend.
+
+
+DATA: 19/03/2026
+
+✅ CONCLUÍDO:
+- Reconexão do frontend com backend Django
+- Correção de erro "container null"
+- Ajuste de IDs corretos (#gridView → #tabela-produtos)
+- Renderização dinâmica funcionando (GET ok)
+- Atualização em tempo real após Ctrl+Shift+R
+- Criação da função criarProduto (POST)
+- Criação da função salvarProduto
+- Abertura do modal funcionando via botão "Novo Produto"
+
+⚠️ PROBLEMAS IDENTIFICADOS:
+- Erro 400 ao criar produto (POST)
+- Campos obrigatórios do backend não estão sendo enviados corretamente
+- Produtos antigos com preço zerado (dados incompletos no banco)
+- Indicador de estoque baixo ainda não implementado no frontend
+
+📌 PRÓXIMOS PASSOS (PRIORIDADE):
+1. Corrigir erro 400 no POST (validar campos obrigatórios)
+2. Garantir envio correto:
+   - nome
+   - preco_custo
+   - preco_venda
+   - estoque
+   - categoria (se obrigatório)
+3. Atualizar frontend para indicar estoque baixo
+4. Melhorar feedback visual ao salvar produto (alerta/sucesso)
+5. Limpar formulário após salvar
+6. (Opcional) Fechar modal automaticamente após cadastro
+
+💡 OBSERVAÇÕES:
+- Sistema já está com base funcional (CRUD parcialmente iniciado)
+- Backend respondendo corretamente
+- Problemas atuais são de integração/validação, não de estrutura
+
+STATUS: 🚧 EM DESENVOLVIMENTO (ETAPA CRÍTICA SUPERADA)
