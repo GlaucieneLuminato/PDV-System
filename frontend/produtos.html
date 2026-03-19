@@ -561,9 +561,41 @@
             <span class="badge bg-light text-dark px-3 py-2 rounded-pill">áudio (28)</span>
             <span class="badge bg-light text-dark px-3 py-2 rounded-pill">games (19)</span>
             <span class="badge bg-light text-dark px-3 py-2 rounded-pill">monitores (12)</span>
-            <span class="badge bg-primary text-white px-3 py-2 rounded-pill ms-auto"><i class="bi bi-plus-lg"></i> novo produto</span>
+            <span class="badge bg-primary text-white px-3 py-2 rounded-pill ms-auto"
+                   style="cursor:pointer;"
+                   onclick="abrirModalProduto()">
+                        <i class="bi bi-plus-lg"></i>NOVO PRODUTO
+            </span>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Novo Produto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="text" id="nome" class="form-control mb-2" placeholder="Nome do produto">
+
+        <input type="number" id="preco_custo" class="form-control mb-2" placeholder="Preço de custo">
+
+        <input type="number" id="preco_venda" class="form-control mb-2" placeholder="Preço de venda">
+
+        <input type="number" id="estoque" class="form-control mb-2" placeholder="Estoque">
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <!-- Bootstrap JS (opcional) -->
