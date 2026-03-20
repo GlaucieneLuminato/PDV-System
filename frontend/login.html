@@ -24,7 +24,7 @@
                  
                 <h2>Acessar o sistema</h2>
 
-          <form action="controllers/login.php" method="post">
+          <form onsubmit="fazerLogin(event)">
     <div class="field">
         <label>Usuário</label>
         <div class="input-wrapper">
@@ -44,7 +44,47 @@
     <button type="submit" class="login-btn" name="entrar">
         <i class="fas fa-right-to-bracket"></i> Entrar
     </button>
-    </form>
 </form>
+
+<script>
+async function fazerLogin(event){
+    event.preventDefault();
+
+    const usuario = document.querySelector('input[name="usuario"]').value;
+    const senha = document.querySelector('input[name="senha"]').value;
+
+    try{
+        const resposta = await fetch("http://127.0.0.1:8000/api/login/", {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: GlauceDev,
+                password: 1234
+            })
+        });
+
+        const data = await resposta.json();
+
+        if(!resposta.ok){
+            alert("Usuário ou senha inválidos");
+            return;
+        }
+
+        console.log("Login sucesso:", data);
+
+        localStorage.setItem("token", data.access);
+        localStorage.setItem("token", data.refresh);
+
+        window.location.href = "dashboard.html";
+
+    }catch(error){
+        console.error("Erro no login:", error);
+    }
+}
+</script>
+
+
 </body>
 </html>
