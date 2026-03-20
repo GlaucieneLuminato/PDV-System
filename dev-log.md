@@ -223,3 +223,132 @@ DATA: 19/03/2026
 - Problemas atuais são de integração/validação, não de estrutura
 
 STATUS: 🚧 EM DESENVOLVIMENTO (ETAPA CRÍTICA SUPERADA)
+
+
+🧠 📓 DEVLOG — 20/03/2026
+
+✅ O que foi feito hoje (MARCO IMPORTANTE)
+🔗 Integração Frontend + Backend (Django)
+Conexão completa com API /api/produtos/
+
+CRUD funcionando:
+✅ Criar produto (POST)
+✅ Listar produtos (GET)
+✅ Atualizar produto (PUT)
+✅ Deletar produto (DELETE)
+
+🧩 Correções importantes feitas
+Corrigido erro 400 (Bad Request) → campo preco obrigatório
+Ajustado envio de dados com parseFloat e parseInt
+Tratamento de erro vindo do Django (resposta.json() antes do if)
+
+🧱 Modal de produto
+Abertura funcionando ✔
+Salvamento funcionando ✔
+Limpeza automática do formulário ✔
+Fechamento automático ✔
+
+✏️ Edição de produto
+Preenchimento automático dos inputs ✔
+Atualização via PUT ✔
+Reset do modo edição ✔
+
+🗑️ Exclusão de produto
+Botão funcional ✔
+Confirmação antes de deletar ✔
+Atualização automática da lista ✔
+
+🔍 Busca de produtos (FRONT)
+Filtro por:
+nome
+categoria
+SKU
+Renderização dinâmica ✔
+
+🎨 Feedback visual (UX)
+Implementado Toastify
+Mensagens:
+Produto criado ✔
+Produto atualizado ✔
+Produto deletado ✔
+
+🔐 AUTENTICAÇÃO (GRANDE AVANÇO HOJE)
+Configurado JWT no Django
+Endpoint funcionando:
+
+POST /api/login/
+Retorno validado:
+JSON
+{
+  "refresh": "...",
+  "access": "..."
+}
+
+
+🔑 Integração do Token no Front
+
+Criado:
+JavaScript
+function getToken()
+Implementado Authorization:
+JavaScript
+Authorization: Bearer TOKEN
+Aplicado em:
+POST ✔
+PUT ✔
+DELETE ✔
+GET (ajustado hoje) ✔
+🧠 Correções críticas finais
+❌ produtos is not defined ✔ Corrigido para listaProdutos
+❌ Render duplicado ✔ Centralizado em renderizarProdutos
+❌ Token salvo errado ✔ Agora usa access
+
+🚧 O QUE FALTA (RUMO À PRODUÇÃO)
+Agora sim, você tá na fase final de MVP 👇
+
+🔐 1. Proteção de rotas (PRÓXIMO PASSO)
+👉 Impedir acesso sem login
+Verificar token ao carregar páginas
+Se não tiver → redirecionar para login
+
+🔄 2. Refresh Token (nível mais avançado)
+Renovar token automaticamente
+Evitar logout inesperado
+
+👤 3. Dados do usuário logado
+Mostrar nome no dashboard
+Melhorar UX
+
+🧾 4. Módulo de vendas (PDV)
+Criar venda
+Adicionar itens
+Calcular total
+Baixar estoque automaticamente
+
+📊 5. Dashboard
+Total de vendas
+Produtos com baixo estoque
+Faturamento
+
+🧱 6. Preparação para produção
+Configurar:
+CORS
+DEBUG = False
+ALLOWED_HOSTS
+Deploy:
+Backend (Render / Railway)
+Frontend (Vercel / Netlify)
+🗄️ 7. Banco de dados (FUTURO)
+Migrar de SQLite → PostgreSQL
+
+
+🧭 RESUMO DO ESTADO ATUAL
+
+👉 Seu sistema hoje já é:
+✔ CRUD completo
+✔ Integrado com API
+✔ Com autenticação JWT
+✔ Com feedback visual
+✔ Com busca
+✔ Estrutura profissional
+👉 Traduzindo: Você já tem um mini ERP / PDV funcional
