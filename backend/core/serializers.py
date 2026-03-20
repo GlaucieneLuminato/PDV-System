@@ -16,4 +16,13 @@ class VendaSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Venda
-        fields = "__all__" 
+        fields = ["id","data_venda","itens"]
+        
+        def create(self,validated_data):
+            itens_data = validated_data.pop("itens")
+            venda = Venda.objects.create(venda=venda, **validated_data)
+            
+            for item_data in itens_data:
+                ItemVenda.objects.create(venda=venda, **item_data)
+                
+                return venda 
