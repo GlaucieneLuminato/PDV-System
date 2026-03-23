@@ -2254,5 +2254,45 @@
             }).showToast();
         }
     </script>
+
+    <script>
+function verificarLogin(){
+    const token = localStorage.getItem("access");
+
+    if(!token){
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarLogin);
+</script>
+
+<script>
+    const API_PRODUTOS = "http://127.0.0.1:8000/api/produtos/";
+
+let produtos = [];
+
+async function carregarProdutos(){
+    try{
+        const resposta = await fetch(API_PRODUTOS, {
+            headers:{
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            }
+        });
+
+        produtos = await resposta.json();
+        renderizarProdutos(produtos);
+
+    }catch(error){
+        console.error("Erro ao carregar produtos:", error);
+    }
+}
+</script>
+
+<script src="./api.js"></script>
+
+
+
+
 </body>
 </html>

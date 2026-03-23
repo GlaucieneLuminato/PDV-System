@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Produto, Venda, ItemVenda
+from django.contrib.auth.models import User
+from rest_framework import serializers
  
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +28,15 @@ class VendaSerializer(serializers.ModelSerializer):
                 ItemVenda.objects.create(venda=venda, **item_data)
                 
                 return venda 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id','username','email','password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+        
+        def create(self, validated_data):
+            user = User.object.create_user(**validated_data)
+            return user
