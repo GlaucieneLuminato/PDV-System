@@ -1083,5 +1083,18 @@
             }).showToast();
         }
     </script>
+
+<script>
+function verificarLogin(){
+    const token = localStorage.getItem("access");
+
+    if(!token){
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarLogin);
+</script>
+
 </body>
 </html>

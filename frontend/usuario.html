@@ -390,89 +390,18 @@
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        let users = [
-            {
-                id: 1,
-                name: 'André Luiz Dias',
-                email: 'andre.dias@stockmaster.com',
-                cpf: '123.456.789-00',
-                phone: '(11) 98765-4321',
-                role: 'admin',
-                roleName: 'Administrador',
-                status: 'active',
-                lastAccess: 'Hoje, 09:45',
-                initials: 'AD',
-                permissions: {
-                    products: 'full',
-                    sales: 'edit',
-                    reports: 'view',
-                    users: 'full',
-                    settings: 'full'
-                }
-            },
-            {
-                id: 2,
-                name: 'Maria Santos',
-                email: 'maria.santos@stockmaster.com',
-                cpf: '987.654.321-00',
-                phone: '(11) 91234-5678',
-                role: 'manager',
-                roleName: 'Gerente',
-                status: 'active',
-                lastAccess: 'Hoje, 10:30',
-                initials: 'MS',
-                permissions: {
-                    products: 'edit',
-                    sales: 'edit',
-                    reports: 'view',
-                    users: 'view',
-                    settings: 'none'
-                }
-            },
-            {
-                id: 3,
-                name: 'João Oliveira',
-                email: 'joao.oliveira@stockmaster.com',
-                cpf: '456.789.123-00',
-                phone: '(11) 95555-1234',
-                role: 'operator',
-                roleName: 'Operador',
-                status: 'active',
-                lastAccess: 'Ontem, 16:20',
-                initials: 'JO',
-                permissions: {
-                    products: 'edit',
-                    sales: 'edit',
-                    reports: 'none',
-                    users: 'none',
-                    settings: 'none'
-                }
-            },
-            {
-                id: 4,
-                name: 'Ana Pereira',
-                email: 'ana.pereira@stockmaster.com',
-                cpf: '789.123.456-00',
-                phone: '(11) 97777-8888',
-                role: 'viewer',
-                roleName: 'Visualizador',
-                status: 'inactive',
-                lastAccess: '20/02/2026',
-                initials: 'AP',
-                permissions: {
-                    products: 'view',
-                    sales: 'view',
-                    reports: 'view',
-                    users: 'none',
-                    settings: 'none'
-                }
-            }
-        ];
+      let users = [];
 
-        let currentUserId = null;
-        let userModal = null;
-        let permissionsModal = null;
+async function carregarUsuarios(){
+    const resposta = await fetch("http://127.0.0.1:8000/api/users/", {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("access")}`
+        }
+    });
 
+    users = await resposta.json();
+    renderUsers(users);
+}
         // ===== INICIALIZAÇÃO =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUsers();
@@ -901,5 +830,17 @@
             }
         }
     </script>
+    <script>
+function verificarLogin(){
+    const token = localStorage.getItem("access");
+
+    if(!token){
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarLogin);
+</script>
+    <script src="./user.js"></script>
 </body>
 </html>

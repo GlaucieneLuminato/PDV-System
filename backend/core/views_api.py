@@ -5,7 +5,9 @@ from django.db.models import Sum
 from django.utils import timezone
 from .models import Produto, Venda, ItemVenda
 from .serializers import ProdutoSerializer, VendaSerializer, ItemVendaSerializer
-
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer
 @api_view(["GET"])
 def dashboard(request):
     hoje = timezone.now().date()
@@ -37,3 +39,8 @@ class VendaViewSet(viewsets.ModelViewSet):
 class ItemVendaViewSet(viewsets.ModelViewSet):
     queryset = ItemVenda.objects.all()
     serializer_class = ItemVendaSerializer
+    
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
