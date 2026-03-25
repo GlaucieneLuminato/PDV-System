@@ -55,7 +55,7 @@ MIDDLEWARE = [
    
 ]
 
-ROOT_URLCONF = 'pdv.urls'
+ROOT_URLCONF ='pdv.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pdv.wsgi.application'
+WSGI_APPLICATION ='pdv.wsgi.application'
 
 
 # Database
