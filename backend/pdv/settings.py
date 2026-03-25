@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'backend.core',
     'rest_framework',
     'corsheaders',
 ]
@@ -52,10 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+   
     
 ]
 
-ROOT_URLCONF = 'pdv.urls'
+ROOT_URLCONF = 'backend.pdv.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pdv.wsgi.application'
+WSGI_APPLICATION = 'backend.pdv.wsgi.application'
 
 
 # Database
@@ -129,7 +130,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
 }

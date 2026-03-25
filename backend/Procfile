@@ -1,1 +1,2 @@
+web: gunicorn backend.pdv.wsgi
 web: cd backend && gunicorn pdv.wsgi
