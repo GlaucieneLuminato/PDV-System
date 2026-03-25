@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 web: cd backend && gunicorn pdv.wsgi
+=======
+web: gunicorn backend.pdv.wsgi
+web: cd backend && gunicorn pdv.wsgi
+>>>>>>> 3dea56748162f8790053208b5f4890f64a9e5471
