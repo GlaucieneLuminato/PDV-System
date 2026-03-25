@@ -1,12 +1,55 @@
-const API_URL = "http://127.0.0.1:8000/api/produtos/"
+const API_URL = "http://127.0.0.1:8000/api/produtos/";
+const API_BASE = "http://127.0.0.1:8000/api/";
+const API_PRODUTOS = API_BASE + "produtos/";
+const API_VENDAS = API_BASE + "vendas/";
+const API_USERS = API_BASE + "users/";
+const API_LOGIN = API_BASE + "login/";
+
+
+
+async function enviarVenda(venda){
+    try{
+        const resposta = await fetch(API_VENDAS,{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            },
+            body: JSON.stringify(venda)
+        });
+
+        const data = await resposta.json(); 
+
+        console.log("RESPOSTA DO DJANGO:", data);
+
+        if(!resposta.ok){
+            console.error("Erro ao salvar venda:", data);
+            return;
+        }
+
+        console.log("Venda salva com sucesso:", data);
+        mostrarToast("Venda registrada!");
+
+    } catch(error){
+        console.error("Erro:", error)
+    }
+}
+function verificarLogin(){
+    const token = localStorage.getItem("access");
+
+    if(!token){
+        alert("Você precisa estar logado");
+        window.location.href = "login.html";
+        return;
+    }
+}
+
 function getToken(){
     return localStorage.getItem("access");
 }
 
-let produtoEditandoId = null
+let produtoEditandoId = null;
 let listaProdutos = [];
-
-
 
 
 function mostrarToast(mensagem, tipo = "success"){
@@ -15,9 +58,10 @@ function mostrarToast(mensagem, tipo = "success"){
         duration: 3000,
         gravity: "top",
         position: "right",
-        backgroundColor: tipo === "success" ? "#28a745" : "#dc3545",
+        background: tipo === "success" ? "#28a745" : "#dc3545",
     }).showToast();
 }
+
 
 function editarProduto(produto){
     produtoEditandoId = produto.id;
@@ -35,22 +79,17 @@ function editarProduto(produto){
 function renderizarProdutos(produtos){
     const container = document.querySelector("#tabela-produtos");
 
+    if(!container){
+        console.warn("Tabela de produtos não existente nessa página")
+        return;
+    }
     container.innerHTML = "";
 
     produtos.forEach(produto => {
 
-        let statusEstoque = "";
-        if(produto.estoque <= 5){
-            statusEstoque = `
-            <span class="badge-stock badge-lowstock">
-                <i class="bi bi-exclamation-triangle-fill me-1"></i>baixo
-            </span>`;
-        } else {
-            statusEstoque = `
-            <span class="badge-stock">
-                <i class="bi bi-check-circle-fill text-success me-1"></i>ok
-            </span>`;
-        }
+        let statusEstoque = produto.estoque <= 5
+            ? `<span class="badge-stock badge-lowstock">baixo</span>`
+            : `<span class="badge-stock">ok</span>`;
 
         const linha = `
         <tr>
@@ -74,9 +113,7 @@ function renderizarProdutos(produtos){
 
 
 async function deletarProduto(id){
-    const confirmar = confirm("Tem certeza que deseja excluir?");
-
-    if(!confirmar) return;
+    if(!confirm("Tem certeza que deseja excluir?")) return;
 
     try{
         const resposta = await fetch(`${API_URL}${id}/`, {
@@ -86,14 +123,19 @@ async function deletarProduto(id){
             }
         });
 
+        if(resposta.status === 401){
+            alert("Sessão expirada");
+            localStorage.removeItem("access");
+            window.location.href = "login.html";
+            return;
+        }
+
         if(!resposta.ok){
             console.error("Erro ao deletar");
             return;
         }
 
-        console.log("Produto deletado");
         mostrarToast("Produto deletado com sucesso");
-
         carregarProdutos();
 
     } catch(error){
@@ -103,9 +145,9 @@ async function deletarProduto(id){
 
 
 function abrirModalProduto(){
-    const modal = new bootstrap.Modal(document.getElementById('productModal'));
-    modal.show();
+    new bootstrap.Modal(document.getElementById('productModal')).show();
 }
+
 
 async function criarProduto(produto){
     try{
@@ -120,40 +162,32 @@ async function criarProduto(produto){
 
         const data = await resposta.json();
 
+        if(resposta.status === 401){
+            alert("Sessão expirada");
+            localStorage.removeItem("access");
+            window.location.href = "login.html";
+            return;
+        }
+
         if(!resposta.ok){
             console.error("ERRO DO DJANGO:", data);
             return;
         }
 
-        console.log("Produto criado:", data);
         mostrarToast("Produto criado com sucesso");
-
-        
         carregarProdutos();
 
-        document.getElementById("nome").value = "";
-        document.getElementById("preco_custo").value = "";
-        document.getElementById("preco_venda").value = "";
-        document.getElementById("estoque").value = "";
-        document.getElementById("sku").value = "";
-        document.getElementById("categoria").value = "";
-
-       
-        const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-        modal.hide();
+        limparFormulario();
 
     } catch(error){
         console.error("Erro:", error)
     }
 }
 
-function salvarProduto(){
-    console.log("CLIQUEI EM SALVAR");
 
+function salvarProduto(){
     const produto = {
         nome: document.getElementById("nome").value,
-
-        
         preco: parseFloat(document.getElementById("preco_venda").value) || 0,
         preco_custo: parseFloat(document.getElementById("preco_custo").value) || 0,
         preco_venda: parseFloat(document.getElementById("preco_venda").value) || 0,
@@ -161,172 +195,125 @@ function salvarProduto(){
         sku: document.getElementById("sku").value || "SEM-SKU",
         categoria: document.getElementById("categoria").value || "Outros",
     };
+
     if(produtoEditandoId){
-        atualizarProduto(produtoEditandoId,produto);
-    }else{
+        atualizarProduto(produtoEditandoId, produto);
+    } else {
         criarProduto(produto);
     }
 }
 
+
 async function atualizarProduto(id, produto){
     try{
         const resposta = await fetch(`${API_URL}${id}/`, {
-            method: "PUT", 
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                  "Authorization": `Bearer ${getToken()}`
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(produto)
         });
 
         const data = await resposta.json();
 
+        if(resposta.status === 401){
+            alert("Sessão expirada");
+            localStorage.removeItem("access");
+            window.location.href = "login.html";
+            return;
+        }
+
         if(!resposta.ok){
             console.error("Erro ao atualizar:", data);
             return;
         }
 
-        console.log("Produto atualizado:", data);
-          mostrarToast("Produto atualizado com sucesso");
+        mostrarToast("Produto atualizado com sucesso");
 
         produtoEditandoId = null;
-
         carregarProdutos();
 
-        
-        document.getElementById("nome").value = "";
-        document.getElementById("preco_custo").value = "";
-        document.getElementById("preco_venda").value = "";
-        document.getElementById("estoque").value = "";
-        document.getElementById("sku").value = "";
-        document.getElementById("categoria").value = "";
-
-        const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-        modal.hide();
+        limparFormulario();
 
     } catch(error){
         console.error("Erro:", error);
     }
 }
 
+
 async function carregarProdutos(){
     try{
-        const container = document.querySelector("#tabela-produtos");
-
-        if(!container){
-            console.warn("Elemento tabela-produtos não encontrado!");
-            return;
-        }
-
         const resposta = await fetch(API_URL,{
             headers:{
                 "Authorization": `Bearer ${getToken()}`
             }
         });
-        listaProdutos = await resposta.json();
 
-        listaProdutos = listaProdutos;
+        if(resposta.status === 401){
+            alert("Sessão expirada");
+            localStorage.removeItem("access");
+            window.location.href = "login.html";
+            return;
+        }
+
+        listaProdutos = await resposta.json();
+        console.log("PRODUTOS CLICADOS:", product);
         renderizarProdutos(listaProdutos);
 
     } catch(error){
         console.error("Erro ao carregar produto:", error);
     }
-    
-            let statusEstoque = "";
-            if(produto.estoque <= 5){
-                statusEstoque = `
-                <span class="badge-stock badge-lowstock">
-                    <i class="bi bi-exclamation-triangle-fill me-1"></i>baixo
-                </span>`;
-            } else {
-                statusEstoque = `
-                <span class="badge-stock">
-                    <i class="bi bi-check-circle-fill text-success me-1"></i>ok
-                </span>`;
-            }
+}
 
-            const linha =  `
-            <tr>
-            <td>
-            <div class="d-flex align-items-center gap-3">
-            <div class="product-img">
-            <i class="bi bi-box"></i>
-            </div>
+function limparFormulario(){
+    document.getElementById("nome").value = "";
+    document.getElementById("preco_custo").value = "";
+    document.getElementById("preco_venda").value = "";
+    document.getElementById("estoque").value = "";
+    document.getElementById("sku").value = "";
+    document.getElementById("categoria").value = "";
 
-            <div>
-            <span class="fw-semibold">
-                ${produto.nome}
-            </span>
+    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+    modal.hide();
+}
 
-            <span class="text-secondary small">
-                ${produto.sku || "SEM-SKU"}
-            </span>
-            </div>
-            </div>
-            </td>
+const busca = document.getElementById("busca");
 
-            <td>
-            <span class="badge-stock">
-                ${produto.sku || "-"}
-            </span>
-            </td>
+if(busca){
+    busca.addEventListener("input", function(){
+        const valor = this.value.toLowerCase();
 
-            <td>
-                ${produto.categoria || "-"}
-            </td>
+        const filtrados = listaProdutos.filter(produto =>
+            produto.nome.toLowerCase().includes(valor) ||
+            produto.categoria.toLowerCase().includes(valor) ||
+            produto.sku.toLowerCase().includes(valor)
+        );
 
-            <td>
-            <div class="stock-indicator">
-            <span class="fw-semibold">
-                    ${produto.estoque} un
-            </span>
+        renderizarProdutos(filtrados);
+    });
+}
 
-            <div class="stock-bar">
-            <div class="stock-fill"
-                 style="width:50%">
-            </div>
-            </div>
-            </div>
-            </td>
+document.addEventListener("DOMContentLoaded", ()=>{
+    verificarLogin();
 
-            <td> R$ ${produto.preco_custo}</td>
-            <td> R$ ${produto.preco_venda || "-"}</td>
-
-            <td>
-                ${statusEstoque}
-            </td>
-
-            <td class="action-icons">
-            <i class="bi bi-eye"></i>
-            <i class="bi bi-pencil" style="cursor:pointer"
-   onclick='editarProduto(${JSON.stringify(produto)})'></i>
-            <i class="bi bi-trash" style="cursor:pointer; color:red;"
-   onclick="deletarProduto(${produto.id})"></i>
-            </td>
-            </tr>
-            `;
-
-            container.innerHTML += linha;
-        };
-
-    
-
-
-document.getElementById("busca").addEventListener("input", function(){
-    const valor = this.value.toLowerCase();
-
-    const filtrados = listaProdutos.filter(produto =>
-        produto.nome.toLowerCase().includes(valor) ||
-        produto.categoria.toLowerCase().includes(valor) ||
-        produto.sku.toLowerCase().includes(valor)
-    );
-
-    renderizarProdutos(filtrados);
+    if(document.querySelector("#tabela-produtos")){
+    carregarProdutos()
+}
 });
 
 document.addEventListener("DOMContentLoaded", ()=>{
-    carregarProdutos();
+    const hoje = new Date();
+    const passado = new Date();
+
+    passado.setDate(hoje.getDate() - 30);
+
+    const formatar = (data) => data.toISOString().split("T")[0];
+
+    document.getElementById("startDate").value = formatar(passado);
+    document.getElementById("endDate").value = formatar(hoje);
 });
+
 
 window.deletarProduto = deletarProduto;
 window.editarProduto = editarProduto;
