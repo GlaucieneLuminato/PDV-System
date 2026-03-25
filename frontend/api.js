@@ -1,11 +1,39 @@
 const API_URL = "http://127.0.0.1:8000/api/produtos/";
 const API_BASE = "http://127.0.0.1:8000/api/";
-
 const API_PRODUTOS = API_BASE + "produtos/";
 const API_VENDAS = API_BASE + "vendas/";
 const API_USERS = API_BASE + "users/";
 const API_LOGIN = API_BASE + "login/";
 
+
+
+async function enviarVenda(venda){
+    try{
+        const resposta = await fetch(API_VENDAS,{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            },
+            body: JSON.stringify(venda)
+        });
+
+        const data = await resposta.json(); 
+
+        console.log("RESPOSTA DO DJANGO:", data);
+
+        if(!resposta.ok){
+            console.error("Erro ao salvar venda:", data);
+            return;
+        }
+
+        console.log("Venda salva com sucesso:", data);
+        mostrarToast("Venda registrada!");
+
+    } catch(error){
+        console.error("Erro:", error)
+    }
+}
 function verificarLogin(){
     const token = localStorage.getItem("access");
 
@@ -30,7 +58,7 @@ function mostrarToast(mensagem, tipo = "success"){
         duration: 3000,
         gravity: "top",
         position: "right",
-        backgroundColor: tipo === "success" ? "#28a745" : "#dc3545",
+        background: tipo === "success" ? "#28a745" : "#dc3545",
     }).showToast();
 }
 
@@ -213,6 +241,7 @@ async function atualizarProduto(id, produto){
     }
 }
 
+
 async function carregarProdutos(){
     try{
         const resposta = await fetch(API_URL,{
@@ -229,6 +258,7 @@ async function carregarProdutos(){
         }
 
         listaProdutos = await resposta.json();
+        console.log("PRODUTOS CLICADOS:", product);
         renderizarProdutos(listaProdutos);
 
     } catch(error){
@@ -248,18 +278,21 @@ function limparFormulario(){
     modal.hide();
 }
 
-document.getElementById("busca").addEventListener("input", function(){
-    const valor = this.value.toLowerCase();
+const busca = document.getElementById("busca");
 
-    const filtrados = listaProdutos.filter(produto =>
-        produto.nome.toLowerCase().includes(valor) ||
-        produto.categoria.toLowerCase().includes(valor) ||
-        produto.sku.toLowerCase().includes(valor)
-    );
+if(busca){
+    busca.addEventListener("input", function(){
+        const valor = this.value.toLowerCase();
 
-    renderizarProdutos(filtrados);
-});
+        const filtrados = listaProdutos.filter(produto =>
+            produto.nome.toLowerCase().includes(valor) ||
+            produto.categoria.toLowerCase().includes(valor) ||
+            produto.sku.toLowerCase().includes(valor)
+        );
 
+        renderizarProdutos(filtrados);
+    });
+}
 
 document.addEventListener("DOMContentLoaded", ()=>{
     verificarLogin();
@@ -268,6 +301,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
     carregarProdutos()
 }
 });
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    const hoje = new Date();
+    const passado = new Date();
+
+    passado.setDate(hoje.getDate() - 30);
+
+    const formatar = (data) => data.toISOString().split("T")[0];
+
+    document.getElementById("startDate").value = formatar(passado);
+    document.getElementById("endDate").value = formatar(hoje);
+});
+
 
 window.deletarProduto = deletarProduto;
 window.editarProduto = editarProduto;
