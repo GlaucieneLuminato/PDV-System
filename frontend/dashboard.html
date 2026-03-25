@@ -847,3 +847,825 @@ function logout(){
     <script src="./user.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Dashboard | Isaac Masakidi</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+   
+</head>
+<body>
+    <!-- Sidebar (mesma do dashboard) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h3> SIG-Isaac Masakidi</h3>
+                
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+               <li><a href="perfil.html" class="active"><i class="bi bi-person-circle"></i> Meu Perfil</a></li>
+               <li><a href="usuario.html"><i class="bi bi-people"></i>Usuários</a></li>
+               <li><a href="fornecedor.html"><i class="bi bi-truck"></i>Fornecedores</a></li>
+                <li><a href="produtos.html" ><i class="bi bi-box"></i>Produtos</a></li>
+                <li><a href="venda.html"><i class="bi bi-cart"></i>Vendas</a></li>
+                <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
+                
+                <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
+                <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
+                <li><a href="#"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-search">
+                 <i class="bi bi-search"></i>
+                <input type="text" placeholder="  Pesquisar produtos por nome...">
+            </div>
+            
+            <div class="user-info">
+                
+                <div>
+                    <strong>Emanuel João</strong>
+                    <small class="d-block text-muted">Administrador</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header de Produtos -->
+        <div class="products-header">
+            <div class="page-title">
+                <h4><i class="bi bi-box-seam me-2" style="color: #4f9fff;"></i>Gestão de Produtos</h4>
+                <button class="btn-add-product" data-bs-toggle="modal" data-bs-target="#modalCadastrarProduto">
+                    <i class="bi bi-plus-circle"></i>
+                    Novo Produto
+                </button>
+            </div>
+
+            <!-- Filtros Rápidos -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <i class="bi bi-funnel"></i>
+                    <select>
+                        <option>Todas as Categorias</option>
+                        <option>Eletrônicos</option>
+                        <option>Periféricos</option>
+                        <option>Smartphones</option>
+                        <option>Acessórios</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <i class="bi bi-tag"></i>
+                    <select>
+                        <option>Todos os Status</option>
+                        <option>Ativo</option>
+                        <option>Inativo</option>
+                        <option>Stock Baixo</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <i class="bi bi-sort-alpha-down"></i>
+                    <select>
+                        <option>Ordenar por Nome</option>
+                        <option>Ordenar por Preço</option>
+                        <option>Ordenar por Stock</option>
+                        
+                    </select>
+                </div>
+            </div>
+
+            <!-- Estatísticas Rápidas -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #4f9fff20; color: #4f9fff;">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>0</h3>
+                        <p>Total Produtos</p>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #10b98120; color: #10b981;">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>0</h3>
+                        <p>Ativos</p>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #f59e0b20; color: #f59e0b;">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>0</h3>
+                        <p>Stock Baixo</p>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #8b5cf620; color: #8b5cf6;">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="margin-right:4px;">
+                <circle cx="8" cy="8" r="8" fill="#007FFF"/>
+                <text x="8" y="11" text-anchor="middle" font-size="8" fill="white" font-family="Arial">Kz</text>
+            </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>0</h3>
+                        <p>Valor Total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Produtos -->
+        <div class="products-table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>SKU</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Stock</th>
+                        <th>Stock Mínimo</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <i class="bi bi-laptop"></i>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-name">PC HP</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="product-sku">NB-001</span></td>
+                        <td><span class="category-badge">Eletrônicos</span></td>
+                        <td><span class="price">225.000kz</span></td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span>15</span>
+                                <div class="stock-bar">
+                                    <div class="stock-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>10</td>
+                        <td><span class="status-active">Ativo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action edit" onclick="editarProduto(1)" data-bs-toggle="modal" data-bs-target="#modalEditarProduto">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="excluirProduto(1)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn-action">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-name">NOKIA</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="product-sku">IP-002</span></td>
+                        <td><span class="category-badge">Smartphones</span></td>
+                        <td><span class="price">kz 18.000</span></td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="text-danger">5</span>
+                                <div class="stock-bar">
+                                    <div class="stock-fill" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>15</td>
+                        <td><span class="status-active">Ativo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action edit" onclick="editarProduto(2)" data-bs-toggle="modal" data-bs-target="#modalEditarProduto">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="excluirProduto(2)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn-action">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <i class="bi bi-headphones"></i>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-name">Headset Gamer RGB</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="product-sku">HS-003</span></td>
+                        <td><span class="category-badge">Periféricos</span></td>
+                        <td><span class="price">kz89,90</span></td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span class="text-danger">3</span>
+                                <div class="stock-bar">
+                                    <div class="stock-fill" style="width: 15%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>20</td>
+                        <td><span class="status-active">Ativo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action edit" onclick="editarProduto(3)" data-bs-toggle="modal" data-bs-target="#modalEditarProduto">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="excluirProduto(3)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn-action">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <div class="product-image">
+                                    <i class="bi bi-printer"></i>
+                                </div>
+                                <div class="product-info">
+                                    <span class="product-name">Impressora HP Laser</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="product-sku">IMP-004</span></td>
+                        <td><span class="category-badge">Periféricos</span></td>
+                        <td><span class="price">kz249,00</span></td>
+                        <td>
+                            <div class="stock-indicator">
+                                <span>8</span>
+                                <div class="stock-bar">
+                                    <div class="stock-fill" style="width: 40%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>15</td>
+                        <td><span class="status-inactive">Inativo</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action edit" onclick="editarProduto(4)" data-bs-toggle="modal" data-bs-target="#modalEditarProduto">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="excluirProduto(4)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn-action">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO DE PRODUTO -->
+    <div class="modal fade" id="modalCadastrarProduto" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle"></i>
+                        Cadastrar Novo Produto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCadastrarProduto">
+                        <div class="row g-3">
+                            <!-- Informações Básicas -->
+                            <div class="col-12">
+                                <h6 class="fw-bold" style="color: #1e293b;">Informações Básicas</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <label class="form-label">Nome do Produto *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-box"></i></span>
+                                    <input type="text" class="form-control" placeholder="Ex: Notebook Dell XPS 15" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Codigo de barra *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control" placeholder="NB-001" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                    <select class="form-select" required>
+                                        <option value="">Selecione...</option>
+                                        <option>Eletrônicos</option>
+                                        <option>Periféricos</option>
+                                        <option>Smartphones</option>
+                                        <option>Acessórios</option>
+                                        <option>Informática</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Fornecedor</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-truck"></i></span>
+                                    <select class="form-select">
+                                        <option value="">Selecione...</option>
+                                        <option>Dell Computadores</option>
+                                        <option>Apple Brasil</option>
+                                        <option>HP do Brasil</option>
+                                        <option>Samsung Eletrônicos</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Preços e Stock -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Preços e Stock</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Preço de Custo (kz)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Kz</span>
+                                    <input type="number" class="form-control" step="0.01" placeholder="0.00">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Preço de Venda (Kz) *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">kz</span>
+                                    <input type="number" class="form-control" step="0.01" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Quantidade em Stock *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-boxes"></i></span>
+                                    <input type="number" class="form-control" placeholder="0" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Stock Mínimo *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-exclamation-triangle"></i></span>
+                                    <input type="number" class="form-control" placeholder="10" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Stock Máximo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-arrow-up"></i></span>
+                                    <input type="number" class="form-control" placeholder="100">
+                                </div>
+                            </div>
+                            
+                            <!-- Localização -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Localização no Armazém</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Corredor</label>
+                                <input type="text" class="form-control" placeholder="A">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Prateleira</label>
+                                <input type="text" class="form-control" placeholder="01">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Módulo</label>
+                                <input type="text" class="form-control" placeholder="B">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Posição</label>
+                                <input type="text" class="form-control" placeholder="03">
+                            </div>
+                            
+                            <!-- Imagem do Produto -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Imagem do Produto</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="image-upload-area" onclick="document.getElementById('productImage').click()">
+                                    <i class="bi bi-cloud-upload"></i>
+                                    <p class="mb-1">Clique para fazer upload da imagem</p>
+                                    <small class="text-muted">PNG, JPG até 5MB</small>
+                                    <input type="file" id="productImage" accept="image/*" style="display: none;">
+                                </div>
+                            </div>
+                            
+                            <!-- Descrição -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Descrição</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Descrição do Produto</label>
+                                <textarea class="form-control" rows="3" placeholder="Descrição detalhada do produto..."></textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" rows="2" placeholder="Observações adicionais..."></textarea>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="col-12 mt-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="productStatus" checked>
+                                    <label class="form-check-label" for="productStatus">Produto Ativo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="formCadastrarProduto" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>Cadastrar Produto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO DE PRODUTO -->
+    <div class="modal fade" id="modalEditarProduto" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil-square"></i>
+                        Editar Produto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarProduto">
+                        <div class="row g-3">
+                            <!-- Informações Básicas -->
+                            <div class="col-12">
+                                <h6 class="fw-bold" style="color: #1e293b;">Informações Básicas</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <label class="form-label">Nome do Produto *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-box"></i></span>
+                                    <input type="text" class="form-control" value="Notebook Dell XPS 15" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">SKU *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control" value="NB-001" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                    <select class="form-select" required>
+                                        <option>Eletrônicos</option>
+                                        <option>Periféricos</option>
+                                        <option>Smartphones</option>
+                                        <option>Acessórios</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Fornecedor</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-truck"></i></span>
+                                    <select class="form-select">
+                                        <option>Dell Computadores</option>
+                                        <option>Apple Brasil</option>
+                                        <option>HP do Brasil</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Preços e Stock -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Preços e Stock</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Preço de Custo (€)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">€</span>
+                                    <input type="number" class="form-control" value="899.00" step="0.01">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Preço de Venda (€) *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">€</span>
+                                    <input type="number" class="form-control" value="1299.00" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Lucro (%)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-graph-up"></i></span>
+                                    <input type="number" class="form-control" value="44" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Quantidade em Stock *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-boxes"></i></span>
+                                    <input type="number" class="form-control" value="15" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Stock Mínimo *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-exclamation-triangle"></i></span>
+                                    <input type="number" class="form-control" value="10" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Stock Máximo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-arrow-up"></i></span>
+                                    <input type="number" class="form-control" value="50">
+                                </div>
+                            </div>
+                            
+                            <!-- Localização -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Localização no Armazém</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Corredor</label>
+                                <input type="text" class="form-control" value="A">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Prateleira</label>
+                                <input type="text" class="form-control" value="01">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Módulo</label>
+                                <input type="text" class="form-control" value="B">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Posição</label>
+                                <input type="text" class="form-control" value="03">
+                            </div>
+                            
+                            <!-- Imagem do Produto -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Imagem do Produto</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://via.placeholder.com/100" alt="Preview" class="image-preview">
+                                    <div class="image-upload-area flex-grow-1" onclick="document.getElementById('editProductImage').click()">
+                                        <i class="bi bi-cloud-upload"></i>
+                                        <p class="mb-1">Clique para alterar imagem</p>
+                                        <small class="text-muted">PNG, JPG até 5MB</small>
+                                        <input type="file" id="editProductImage" accept="image/*" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Descrição -->
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold" style="color: #1e293b;">Descrição</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Descrição do Produto</label>
+                                <textarea class="form-control" rows="3">Notebook Dell XPS 15 com processador Intel Core i7, 16GB RAM, SSD 512GB, Tela 15.6" 4K</textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" rows="2">Produto em promoção até fim do mês</textarea>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="col-12 mt-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="editProductStatus" checked>
+                                    <label class="form-check-label" for="editProductStatus">Produto Ativo</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Informações do Sistema -->
+                            <div class="col-12 mt-4">
+                                <div class="alert alert-light bg-light border" style="border-radius: 12px;">
+                                    <small class="text-muted d-block">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Criado em: 15/01/2026 14:30 | Última alteração: 20/02/2026 09:15
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-outline-danger me-auto" onclick="excluirProduto(1)">
+                        <i class="bi bi-trash me-1"></i>Excluir
+                    </button>
+                    <button type="submit" form="formEditarProduto" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="toggleColor.js"></script>
+    <script>
+        // Funções para ações de produtos
+        function editarProduto(id) {
+            console.log('Editando produto:', id);
+            // Aqui você carregaria os dados do produto do backend
+        }
+
+        function excluirProduto(id) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                console.log('Excluindo produto:', id);
+                // Aqui você enviaria a requisição de exclusão
+                alert('Produto excluído com sucesso!');
+            }
+        }
+
+        // Preview de imagem ao selecionar arquivo
+        document.getElementById('productImage')?.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Aqui você pode mostrar um preview da imagem
+                    console.log('Imagem selecionada');
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('editProductImage')?.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Aqui você pode atualizar o preview da imagem
+                    console.log('Nova imagem selecionada');
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Cálculo automático de lucro
+        const custoInput = document.querySelector('input[placeholder="0.00"]');
+        const vendaInput = document.querySelectorAll('input[placeholder="0.00"]')[1];
+        const lucroInput = document.querySelector('input[placeholder="0"]');
+
+        if (custoInput && vendaInput && lucroInput) {
+            function calcularLucro() {
+                const custo = parseFloat(custoInput.value) || 0;
+                const venda = parseFloat(vendaInput.value) || 0;
+                if (custo > 0 && venda > 0) {
+                    const lucro = ((venda - custo) / custo * 100).toFixed(1);
+                    lucroInput.value = lucro;
+                }
+            }
+
+            custoInput.addEventListener('input', calcularLucro);
+            vendaInput.addEventListener('input', calcularLucro);
+        }
+
+        // Filtros de pesquisa
+        const searchInput = document.querySelector('.nav-search input');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function(e) {
+                const termo = e.target.value.toLowerCase();
+                const linhas = document.querySelectorAll('tbody tr');
+                
+                linhas.forEach(linha => {
+                    const texto = linha.textContent.toLowerCase();
+                    if (texto.includes(termo)) {
+                        linha.style.display = '';
+                    } else {
+                        linha.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Exportar dados (simulação)
+        document.querySelector('.btn-add-product')?.addEventListener('click', function() {
+            // Abre o modal de cadastro automaticamente pelo data-bs-toggle
+        });
+
+        // Atalho de teclado para novo produto (Ctrl + N)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                const modal = new bootstrap.Modal(document.getElementById('modalCadastrarProduto'));
+                modal.show();
+            }a
+        });
+    </script>
+</body>
+</html>
