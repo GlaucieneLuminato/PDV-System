@@ -1,5 +1,5 @@
-const API_URL = "http://127.0.0.1:8000/api/produtos/";
-const API_BASE = "http://127.0.0.1:8000/api/";
+const API_URL = "https://pdv-system-c359.onrender.com";
+const API_BASE = "https://pdv-system-c359.onrender.com";
 const API_PRODUTOS = API_BASE + "produtos/";
 const API_VENDAS = API_BASE + "vendas/";
 const API_USERS = API_BASE + "users/";
