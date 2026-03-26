@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend.core',
+    'core',
     'rest_framework',
     'corsheaders',
 ]
@@ -56,7 +56,7 @@ MIDDLEWARE = [
     
 ]
 
-ROOT_URLCONF = 'backend.pdv.urls'
+ROOT_URLCONF ='pdv.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.pdv.wsgi.application'
+WSGI_APPLICATION ='pdv.wsgi.application'
 
 
 # Database
