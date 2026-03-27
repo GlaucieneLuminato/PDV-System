@@ -93,3 +93,21 @@ function verificarLogin(){
 }
 
 document.addEventListener("DOMContentLoaded", verificarLogin);
+
+const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
+    method: "POST",
+    headers: {
+        "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+        username: username,
+        password: password 
+    })
+});
+const data = await resposta.json();
+
+if (data.tipo === "admin"){
+    window.location.href = "admin.html";
+}else {
+    window.location.href = "dashboard.html"
+}
