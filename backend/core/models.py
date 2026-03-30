@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+
 
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
@@ -74,13 +74,9 @@ class Funcionario(models.Model):
     data_nascimento = models.DateField()
     cpf = models.CharField(max_length=14)
     
-    is_admin = models.BooleanField(default=False)
+   
     def __str__(self):return self.user.username
+    
 
-class Usuario(AbstractBaseUser):
-    TIPO_USUARIO = (
-        ('admin', 'Administrador'),
-        ('funcionario','Funcionario'),
-    )
-    tipo = models.CharField(max_length=20, choices=TIPO_USUARIO)
+
 # Create your models here.
