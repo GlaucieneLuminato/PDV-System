@@ -54,7 +54,7 @@ async function fazerLogin(event){
     const senha = document.getElementById("senha").value;
 
     try{
-        const resposta = await fetch("http://127.0.0.1:8000/api/login/", {
+        const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -77,12 +77,15 @@ async function fazerLogin(event){
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
 
-        window.location.href = "./dasboard.html";
+        window.location.href = "./dashboard.html";
 
     }catch(error){
         console.error("Erro no login:", error);
+    
     }
 }
+
+ 
 </script>
 
 

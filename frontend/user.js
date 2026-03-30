@@ -1,7 +1,7 @@
 let users = [];
 
 async function carregarUsuarios(){
-    const resposta = await fetch("http://127.0.0.1:8000/api/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("access")}`
         }
@@ -20,7 +20,7 @@ async function saveUser(){
         role: document.getElementById("userRole").value,
     };
 
-    const resposta = await fetch("http://127.0.0.1:8000/api/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -93,3 +93,30 @@ function verificarLogin(){
 }
 
 document.addEventListener("DOMContentLoaded", verificarLogin);
+
+const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
+    method: "POST",
+    headers: {
+        "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+        username: username,
+        password: password 
+    })
+});
+const data = await resposta.json();
+
+if (data.tipo === "admin"){
+    window.location.href = "admin.html";
+}else {
+    window.location.href = "dashboard.html"
+}
+
+const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/users/me/",{
+    headers: {
+        Authorization: `Bearer ${data.access}`
+    }
+});
+
+
+

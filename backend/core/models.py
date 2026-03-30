@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+from django.contrib.auth.models import User
+from django.db import models
+
 
 class Produto(models.Model):
     nome = models.CharField(max_length=200)
@@ -61,7 +64,19 @@ class ItemVenda(models.Model):
                     
     def __str__(self):
                     return f"{self.produto.nome} - {self.quantidade}"
+                
+
         
+class Funcionario(models.Model):
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    telefone = models.CharField(max_length=15)
+    data_nascimento = models.DateField()
+    cpf = models.CharField(max_length=14)
+    
+   
+    def __str__(self):return self.user.username
+    
 
 
 # Create your models here.
