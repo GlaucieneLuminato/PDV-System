@@ -16,7 +16,7 @@ router.register(r'users',UserViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path("dashboard/", dashboard, name="dashboard"), 
-    path('api/login/',TokenObtainPairView.as_view(),name='login'),
-    path('api/me/',me),
+    path('login/',TokenObtainPairView.as_view(),name='login'),
+    path('me/',me),
 ]
 
