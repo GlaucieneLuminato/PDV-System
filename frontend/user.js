@@ -112,11 +112,21 @@ if (data.tipo === "admin"){
     window.location.href = "dashboard.html"
 }
 
-const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/users/me/",{
+console.log("TOKEN:", localStorage.getItem("access"));
+
+const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
     headers: {
-        Authorization: `Bearer ${data.access}`
+        Authorization: `Bearer ${localStorage.getItem("access")}`
     }
 });
+
+console.log("STATUS:", userResponse.status);
+
+const userData = await userResponse.json();
+
+console.log("USER DATA:", userData);
+
+
 
 
 
