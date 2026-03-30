@@ -5,6 +5,7 @@ from django.urls import path
 from .views_api import dashboard
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .views_api import UserViewSet
+from .views import me
 
 router = DefaultRouter()
 router.register(r'produtos',ProdutoViewSet)
@@ -15,6 +16,7 @@ router.register(r'users',UserViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path("dashboard/", dashboard, name="dashboard"), 
-    path('login/',TokenObtainPairView.as_view(), name='login'),
+    path('api/login/',TokenObtainPairView.as_view(),name='login'),
+    path('api/me/',me),
 ]
 
