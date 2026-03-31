@@ -125,10 +125,6 @@ console.log(userData);
 
 console.log("STATUS:", userResponse.status);
 
-const userData = await userResponse.json();
-
-console.log("USER DATA:", userData);
-
 
 
 
