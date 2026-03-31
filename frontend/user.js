@@ -120,6 +120,9 @@ const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/",
     }
 });
 
+const userData = await userResponse.json();
+console.log(userData);
+
 console.log("STATUS:", userResponse.status);
 
 const userData = await userResponse.json();
