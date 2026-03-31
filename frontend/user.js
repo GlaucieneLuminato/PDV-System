@@ -94,37 +94,49 @@ function verificarLogin(){
 
 document.addEventListener("DOMContentLoaded", verificarLogin);
 
-const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
-    method: "POST",
-    headers: {
-        "Content-Type":"application/json"
-    },
-    body: JSON.stringify({
-        username: username,
-        password: password 
-    })
-});
-const data = await resposta.json();
+async function login() {
+    const username = document.getElementById("userName").value;
+    const password = document.getElementById("userPassword").value;
 
-if (userData.tipo === "admin"){
-    window.location.href = "admin.html";
-}else {
-    window.location.href = "dashboard.html"
-}
+    const response = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
 
-console.log("TOKEN:", localStorage.getItem("access"));
+    const data = await response.json();
 
-const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`
+    if (!response.ok) {
+        alert("Erro no login!");
+        return;
     }
-});
 
-const userData = await userResponse.json();
-console.log(userData);
+    
+    localStorage.setItem("access", data.access);
 
-console.log("STATUS:", userResponse.status);
+   
+    const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
+        headers: {
+            "Authorization": `Bearer ${data.access}`
+        }
+    });
 
+    const userData = await userResponse.json();
+
+    console.log("USER:", userData);
+
+   
+    if (userData.tipo === "admin") {
+        window.location.href = "admin.html";
+    } else {
+        window.location.href = "dashboard.html";
+    }
+}
 
 
 
