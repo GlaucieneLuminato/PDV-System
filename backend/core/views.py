@@ -39,4 +39,6 @@ def me(request):
         "username": user.username,
         "tipo": tipo
     })
+            "is_superuser": user.is_superuser
+        })
 # Create your views here.

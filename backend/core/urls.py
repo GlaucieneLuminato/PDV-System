@@ -18,6 +18,12 @@ urlpatterns = [
     path('login/',TokenObtainPairView.as_view(),name='login'),
     path('me/',me),
     
+urlpatterns = [
+    
+    path("dashboard/", dashboard, name="dashboard"), 
+    path('login/',TokenObtainPairView.as_view(),name='login'),
+    path('me/',me),
+   
     path("", include(router.urls)),
 ]
 
