@@ -106,7 +106,7 @@ const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", 
 });
 const data = await resposta.json();
 
-if (data.tipo === "admin"){
+if (userData.tipo === "admin"){
     window.location.href = "admin.html";
 }else {
     window.location.href = "dashboard.html"
@@ -119,6 +119,9 @@ const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/",
         Authorization: `Bearer ${localStorage.getItem("access")}`
     }
 });
+
+const userData = await userResponse.json();
+console.log(userData);
 
 console.log("STATUS:", userResponse.status);
 
