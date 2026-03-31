@@ -13,12 +13,11 @@ router.register(r'vendas',VendaViewSet)
 router.register(r'itens',ItemVendaViewSet)
 router.register(r'users',UserViewSet)
 
-urlpatterns = [
-    path('',include(router.urls)),
+urlpatterns = [ 
     path("dashboard/", dashboard, name="dashboard"), 
     path('login/',TokenObtainPairView.as_view(),name='login'),
     path('me/',me),
-    path("dashboard/", dashboard, name="dashboard"),
+    
     path("", include(router.urls)),
 ]
 
