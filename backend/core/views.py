@@ -24,21 +24,8 @@ def criar_funcionario(request):
     return Response({'msg':'Funcionário criado'})
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def me(request):
-    user = request.user
-
-    if user.is_superuser:
-        tipo = "admin"
-    elif user.is_staff:
-        tipo = "funcionario"
-    else:
-        tipo = "usuario"
-
-    return Response({
-        "username": user.username,
-        "tipo": tipo
-    })
+    return Response({"msg":"ok"})
          
         
 # Create your views here.
