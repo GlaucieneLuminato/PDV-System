@@ -86,6 +86,7 @@ async function fazerLogin(event){
         });
 
         const userData = await userResponse.json();
+        localStorage.setItem("tipo", userData.tipo);
 
         console.log("USER:", userData);
 
