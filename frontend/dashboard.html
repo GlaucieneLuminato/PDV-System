@@ -27,21 +27,29 @@
             </div>
         </div>
         
-        <div class="sidebar-menu">
-            <ul>
-               <li><a href="perfil.html" class="active"><i class="bi bi-person-circle"></i> Meu Perfil</a></li>
-               <li><a href="usuario.html"><i class="bi bi-people"></i>Usuários</a></li>
-               <li><a href="fornecedor.html"><i class="bi bi-truck"></i>Fornecedores</a></li>
-                <li><a href="produtos.html" ><i class="bi bi-box"></i>Produtos</a></li>
-                <li><a href="venda.html"><i class="bi bi-cart"></i>Vendas</a></li>
-                <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
-                
-                <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
-                <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
-                <li><a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
-            </ul>
-        </div>
-    </div>
+       <div class="sidebar-menu">
+    <ul>
+       <li id="menuPerfil">
+           <a href="perfil.html" class="active">
+               <i class="bi bi-person-circle"></i> Meu Perfil
+           </a>
+       </li>
+
+       <li id="menuUsuarios">
+           <a href="usuario.html">
+               <i class="bi bi-people"></i>Usuários
+           </a>
+       </li>
+
+       <li><a href="fornecedor.html"><i class="bi bi-truck"></i>Fornecedores</a></li>
+       <li><a href="produtos.html"><i class="bi bi-box"></i>Produtos</a></li>
+       <li><a href="venda.html"><i class="bi bi-cart"></i>Vendas</a></li>
+       <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
+       <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
+       <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
+       <li><a href="#"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
+    </ul>
+</div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -876,21 +884,29 @@ function logout(){
             </div>
         </div>
         
-        <div class="sidebar-menu">
-            <ul>
-               <li><a href="perfil.html" class="active"><i class="bi bi-person-circle"></i> Meu Perfil</a></li>
-               <li><a href="usuario.html"><i class="bi bi-people"></i>Usuários</a></li>
-               <li><a href="fornecedor.html"><i class="bi bi-truck"></i>Fornecedores</a></li>
-                <li><a href="produtos.html" ><i class="bi bi-box"></i>Produtos</a></li>
-                <li><a href="venda.html"><i class="bi bi-cart"></i>Vendas</a></li>
-                <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
-                
-                <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
-                <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
-                <li><a href="#"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
-            </ul>
-        </div>
-    </div>
+       <div class="sidebar-menu">
+    <ul>
+       <li id="menuPerfil">
+           <a href="perfil.html" class="active">
+               <i class="bi bi-person-circle"></i> Meu Perfil
+           </a>
+       </li>
+
+       <li id="menuUsuarios">
+           <a href="usuario.html">
+               <i class="bi bi-people"></i>Usuários
+           </a>
+       </li>
+
+       <li><a href="fornecedor.html"><i class="bi bi-truck"></i>Fornecedores</a></li>
+       <li><a href="produtos.html"><i class="bi bi-box"></i>Produtos</a></li>
+       <li><a href="venda.html"><i class="bi bi-cart"></i>Vendas</a></li>
+       <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
+       <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
+       <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
+       <li><a href="#"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
+    </ul>
+</div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -1666,6 +1682,49 @@ function logout(){
                 modal.show();
             }a
         });
+
+       
+    </script>
+
+  
+<script>
+
+async function verificarPermissao() {
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const resposta = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const user = await resposta.json();
+
+        console.log("Usuário:", user);
+
+        if (user.tipo !== "admin") {
+            const menuPerfil = document.getElementById("menuPerfil");
+            const menuUsuarios = document.getElementById("menuUsuarios");
+
+            if (menuPerfil) menuPerfil.style.display = "none";
+            if (menuUsuarios) menuUsuarios.style.display = "none";
+        }
+
+    } catch (erro) {
+        console.error("Erro ao verificar usuário:", erro);
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarPermissao);
+
+</script>
     </script>
 </body>
 </html>

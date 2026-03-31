@@ -841,6 +841,32 @@ function verificarLogin(){
 
 document.addEventListener("DOMContentLoaded", verificarLogin);
 </script>
+
+<script>
+async function verificarAdmin() {
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const user = await resposta.json();
+
+    if (user.tipo !== "admin") {
+        alert("Apenas administradores podem acessar essa área");
+        window.location.href = "dashboard.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarAdmin);
+</script>
     <script src="./user.js"></script>
 </body>
 </html>
