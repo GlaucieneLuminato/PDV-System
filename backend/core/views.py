@@ -22,6 +22,7 @@ def criar_funcionario(request):
     return Response({'msg':'Funcionário criado'})
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def me(request):
     user = request.user
 
@@ -36,15 +37,6 @@ def me(request):
         "username": user.username,
         "tipo": tipo
     })
-    
-    @api_view(["GET"])
-    @permission_classes([IsAuthenticated])
-    def me(request): 
-        user = request.user
-        return Response({
-            "username": user.username,
-            "email": user.email,
-            "is_staff": user.is_staff,
             "is_superuser": user.is_superuser
         })
 # Create your views here.
