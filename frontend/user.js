@@ -122,7 +122,7 @@ async function login() {
    
     const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
         headers: {
-            "Authorization": `Bearer ${data.access}`
+            "Authorization": `Bearer ${localStorage.getItem("access")}`
         }
     });
 
@@ -131,10 +131,10 @@ async function login() {
     console.log("USER:", userData);
 
    
-    if (userData.tipo === "admin") {
-        window.location.href = "admin.html";
+    if (userData.is_staff) {
+       localStorage.setItem("tipo", "admin");
     } else {
-        window.location.href = "dashboard.html";
+       localStorage.setItem("tipo", "funcionario");
     }
 }
 

@@ -345,6 +345,14 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="api.js"></script>
 
+        <script>
+        const tipo = localStorage.getItem("tipo");
+        if(tipo !== "admin"){
+            alert("Acesso negado");
+            window.location.href = "dashboard.html";
+        }
+    </script>
+
     <script>
         // ===== CONFIGURAÇÕES =====
         const API_BASE_URL = 'https://api.stockmaster.com/v1';
