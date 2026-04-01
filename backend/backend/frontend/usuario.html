@@ -402,7 +402,7 @@
       let users = [];
 
 async function carregarUsuarios(){
-    const resposta = await fetch("http://127.0.0.1:8000/api/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("access")}`
         }
@@ -872,7 +872,7 @@ async function verificarAdmin() {
 
     const user = await resposta.json();
 
-    if (user.tipo !== "admin") {
+    if (user.is_staff !== true) {
         alert("Apenas administradores podem acessar essa área");
         window.location.href = "dashboard.html";
     }
