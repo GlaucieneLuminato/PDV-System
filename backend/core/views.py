@@ -16,8 +16,8 @@ def me(request):
         tipo = "usuario"
 
     return Response({
-        "username": user.username,
-        "tipo": tipo
+        "username": request.user.username,
+        "is_staff": request.user.is_staff, 
     })
     
 
