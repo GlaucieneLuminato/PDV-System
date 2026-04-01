@@ -871,7 +871,7 @@ async function verificarAdmin() {
 
     const user = await resposta.json();
 
-    if (user.tipo !== "admin") {
+    if (user.is_staff !== true) {
         alert("Apenas administradores podem acessar essa área");
         window.location.href = "dashboard.html";
     }
