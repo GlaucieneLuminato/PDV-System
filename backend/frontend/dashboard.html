@@ -1768,6 +1768,8 @@ if (custoInput && vendaInput && lucroInput) {
 <script>
     const tipo = localStorage.getItem("tipo");
 
+    console.log("TIPO:", tipo);
+
     if(tipo !== "admin"){
         const menuUsuarios = document.getElementById("menuUsuarios");
         const menuPerfil = document.getElementById("menuPerfil");

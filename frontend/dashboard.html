@@ -47,7 +47,7 @@
        <li><a href="#"><i class="bi bi-arrow-left-right"></i>Movimentações</a></li>
        <li><a href="#"><i class="bi bi-bar-chart"></i> Relatórios</a></li>
        <li><a href="#"><i class="bi bi-gear"></i> Configurações</a></li>
-       <li><a href="#"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
+       <li><a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Sair</a></li>
     </ul>
 </div>
 
@@ -1650,9 +1650,7 @@ function logout(){
         });
 
         // Cálculo automático de lucro
-       const custoInput = document.getElementById("custo");
-       const vendaInput = document.getElementById("venda");
-       const lucroInput = document.getElementById("lucro");
+   
         if (custoInput && vendaInput && lucroInput) {
             function calcularLucro() {
                 const custo = parseFloat(custoInput.value) || 0;
