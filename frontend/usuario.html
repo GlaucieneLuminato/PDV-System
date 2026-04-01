@@ -389,6 +389,14 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
+        const tipo = localStorage.getItem("tipo");
+        if(tipo !== "admin"){
+            alert("Acesso negado");
+            window.location.href = "dashboard.html";
+        }
+    </script>
+
+    <script>
         // ===== CONFIGURAÇÕES =====
       let users = [];
 
@@ -590,6 +598,10 @@ async function carregarUsuarios(){
         }
 
         // ===== MODAL DE USUÁRIO =====
+
+
+
+
         function openUserModal() {
             currentUserId = null;
             document.getElementById('modalTitleText').textContent = 'Novo Usuário';
