@@ -128,7 +128,9 @@ async function login() {
 
     const userData = await userResponse.json();
 
-    console.log("USER:", userData);
+    console.log("USER DATA:", userData);
+
+    localStorage.setItem("tipo", userData.tipo);
 
    
     if (userData.is_staff) {
