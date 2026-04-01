@@ -94,7 +94,8 @@ function verificarLogin(){
 
 document.addEventListener("DOMContentLoaded", verificarLogin);
 
-async function login() {
+async function login(event) {
+    event.preventDefault();
     const username = document.getElementById("userName").value;
     const password = document.getElementById("userPassword").value;
 
@@ -131,13 +132,9 @@ async function login() {
     console.log("USER DATA:", userData);
 
     localStorage.setItem("tipo", userData.tipo);
+    window.location.href = "dashboard.html";
 
    
-    if (userData.is_staff) {
-       localStorage.setItem("tipo", "admin");
-    } else {
-       localStorage.setItem("tipo", "funcionario");
-    }
 }
 
 

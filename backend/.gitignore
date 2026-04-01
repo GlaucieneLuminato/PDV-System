@@ -1,1 +1,19 @@
- 
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+.env
+
+# Banco de dados
+db.sqlite3
+
+# Arquivos sensíveis
+.env
+
+# VS Code
+.vscode/
+
+# Logs
+*.log 
