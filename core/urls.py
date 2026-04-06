@@ -4,6 +4,7 @@ from .views_api import ProdutoViewSet, VendaViewSet, ItemVendaViewSet, dashboard
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import me
 from .views import me, criar_funcionario
+from .views import dashboard
 
 router = DefaultRouter()
 router.register(r'produtos', ProdutoViewSet)
