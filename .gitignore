@@ -4,16 +4,15 @@ __pycache__/
 
 # Ambiente virtual
 venv/
+
+# Variáveis de ambiente (sensível)
 .env
 
 # Banco de dados
 db.sqlite3
 
-# Arquivos sensíveis
-.env
-
 # VS Code
 .vscode/
 
 # Logs
-*.log 
+*.log
