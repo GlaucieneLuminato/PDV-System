@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>StockMaster - Gestão de Usuários</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+</head>
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebar">
+            <i class="bi bi-x"></i>
+        </button>
+        
+        <div class="sidebar-header">
+            <div class="logo">
+                
+                <h3>SIG-Isaac Masakidi</h3>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="#"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <li><a href="#"><i class="bi bi-box"></i>Produtos</a></li>
+                <li><a href="#"><i class="bi bi-truck"></i>Fornecedores</a></li>
+                <li><a href="#"><i class="bi bi-cart"></i>Vendas</a></li>
+                <li><a href="#" class="active"><i class="bi bi-people"></i>Usuários</a></li>
+                <li><a href="#"><i class="bi bi-person-circle"></i>Meu Perfil</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <div class="nav-search">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Pesquisar...">
+            </div>
+            
+            <div class="nav-user">
+                <div class="nav-icon">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="nav-icon">
+                    <i class="bi bi-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">AD</div>
+                    <div class="user-details">
+                        <strong>André Dias</strong>
+                        <small>Administrador</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h4><i class="bi bi-people me-2" style="color: #4f9fff;"></i>Gestão de Usuários</h4>
+                <p class="text-muted mb-0">Gerencie usuários e permissões do sistema</p>
+            </div>
+            <button class="btn btn-primary" onclick="openUserModal()">
+                <i class="bi bi-person-plus me-1"></i>Novo Usuário
+            </button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchUser" placeholder="Buscar por nome ou email..." onkeyup="filterUsers()">
+            </div>
+            
+            <div class="filter-group">
+                <i class="bi bi-funnel"></i>
+                <select id="filterRole" onchange="filterUsers()">
+                    <option value="">Todos os níveis</option>
+                    <option value="admin">Administrador</option>
+                    <option value="manager">Gerente</option>
+                    <option value="operator">Operador</option>
+                    <option value="viewer">Visualizador</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <i class="bi bi-toggle-on"></i>
+                <select id="filterStatus" onchange="filterUsers()">
+                    <option value="">Todos os status</option>
+                    <option value="active">Ativos</option>
+                    <option value="inactive">Inativos</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tabela de Usuários -->
+        <div class="users-table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Email</th>
+                        <th>Nível de Acesso</th>
+                        <th>Status</th>
+                        <th>Último Acesso</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Dados serão carregados via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Usuário (Cadastro/Edição) -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        <i class="bi bi-person-plus"></i>
+                        <span id="modalTitleText">Novo Usuário</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="row g-3">
+                            <!-- Dados Pessoais -->
+                            <div class="col-12">
+                                <h6 class="fw-bold">Dados Pessoais</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Nome Completo *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="userName" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">CPF</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                    <input type="text" class="form-control" id="userCpf">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">E-mail *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" id="userEmail" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Telefone</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="tel" class="form-control" id="userPhone">
+                                </div>
+                            </div>
+                            
+                            <!-- Nível de Acesso -->
+                            <div class="col-12 mt-3">
+                                <h6 class="fw-bold">Nível de Acesso</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Nível *</label>
+                                <select class="form-select" id="userRole" onchange="togglePermissions()">
+                                    <option value="admin">Administrador</option>
+                                    <option value="manager" selected>Gerente</option>
+                                    <option value="operator">Operador</option>
+                                    <option value="viewer">Visualizador</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="userStatus">
+                                    <option value="active" selected>Ativo</option>
+                                    <option value="inactive">Inativo</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Permissões Específicas -->
+                            <div class="col-12">
+                                <div class="permissions-section">
+                                    <div class="permissions-title">
+                                        <i class="bi bi-shield-check me-2"></i>
+                                        Permissões Específicas
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-info">
+                                            <div class="permission-name">Produtos</div>
+                                            <div class="permission-desc">Gerenciar catálogo de produtos</div>
+                                        </div>
+                                        <select class="form-select" style="width: 120px;" id="permProducts">
+                                            <option value="none">Nenhum</option>
+                                            <option value="view">Visualizar</option>
+                                            <option value="edit" selected>Editar</option>
+                                            <option value="full">Total</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-info">
+                                            <div class="permission-name">Vendas</div>
+                                            <div class="permission-desc">Gerenciar vendas e transações</div>
+                                        </div>
+                                        <select class="form-select" style="width: 120px;" id="permSales">
+                                            <option value="none">Nenhum</option>
+                                            <option value="view">Visualizar</option>
+                                            <option value="edit" selected>Editar</option>
+                                            <option value="full">Total</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-info">
+                                            <div class="permission-name">Relatórios</div>
+                                            <div class="permission-desc">Acessar relatórios e análises</div>
+                                        </div>
+                                        <select class="form-select" style="width: 120px;" id="permReports">
+                                            <option value="none">Nenhum</option>
+                                            <option value="view" selected>Visualizar</option>
+                                            <option value="edit">Editar</option>
+                                            <option value="full">Total</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-info">
+                                            <div class="permission-name">Usuários</div>
+                                            <div class="permission-desc">Gerenciar usuários do sistema</div>
+                                        </div>
+                                        <select class="form-select" style="width: 120px;" id="permUsers">
+                                            <option value="none" selected>Nenhum</option>
+                                            <option value="view">Visualizar</option>
+                                            <option value="edit">Editar</option>
+                                            <option value="full">Total</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="permission-item">
+                                        <div class="permission-info">
+                                            <div class="permission-name">Configurações</div>
+                                            <div class="permission-desc">Alterar configurações do sistema</div>
+                                        </div>
+                                        <select class="form-select" style="width: 120px;" id="permSettings">
+                                            <option value="none" selected>Nenhum</option>
+                                            <option value="view">Visualizar</option>
+                                            <option value="edit">Editar</option>
+                                            <option value="full">Total</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Senha (apenas para novos usuários) -->
+                            <div class="col-12 mt-3" id="passwordSection">
+                                <h6 class="fw-bold">Senha de Acesso</h6>
+                                <hr class="my-2">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Senha *</label>
+                                <input type="password" class="form-control" id="userPassword" onkeyup="checkPasswordStrength()">
+                                <div class="password-strength">
+                                    <div class="password-strength-bar" id="passwordStrength"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Confirmar Senha *</label>
+                                <input type="password" class="form-control" id="confirmPassword">
+                            </div>
+                            
+                            <!-- Observações -->
+                            <div class="col-12 mt-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="userNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()" id="saveUserBtn">
+                        Salvar Usuário
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Permissões -->
+    <div class="modal fade" id="permissionsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-shield-lock"></i>
+                        Permissões do Usuário
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <div class="user-avatar-table" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto;" id="permUserAvatar">JD</div>
+                        <h6 class="mt-2" id="permUserName">João Silva</h6>
+                        <span class="role-badge" id="permUserRole">Administrador</span>
+                    </div>
+                    
+                    <div class="permissions-section mt-3">
+                        <div class="permission-item">
+                            <div class="permission-info">
+                                <div class="permission-name">Produtos</div>
+                            </div>
+                            <span class="badge" id="permProdValue">Total</span>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-info">
+                                <div class="permission-name">Vendas</div>
+                            </div>
+                            <span class="badge" id="permSalesValue">Editar</span>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-info">
+                                <div class="permission-name">Relatórios</div>
+                            </div>
+                            <span class="badge" id="permReportsValue">Visualizar</span>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-info">
+                                <div class="permission-name">Usuários</div>
+                            </div>
+                            <span class="badge" id="permUsersValue">Nenhum</span>
+                        </div>
+                        <div class="permission-item">
+                            <div class="permission-info">
+                                <div class="permission-name">Configurações</div>
+                            </div>
+                            <span class="badge" id="permSettingsValue">Nenhum</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        const tipo = localStorage.getItem("tipo");
+        if(tipo !== "admin"){
+            alert("Acesso negado");
+            window.location.href = "dashboard.html";
+        }
+    </script>
+
+    <script>
+        // ===== CONFIGURAÇÕES =====
+      let users = [];
+
+async function carregarUsuarios(){
+    const resposta = await fetch("http://127.0.0.1:8000/api/users/", {
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("access")}`
+        }
+    });
+
+    users = await resposta.json();
+    renderUsers(users);
+}
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+            
+            userModal = new bootstrap.Modal(document.getElementById('userModal'));
+            permissionsModal = new bootstrap.Modal(document.getElementById('permissionsModal'));
+            
+            // Sidebar functionality
+            setupSidebar();
+        });
+
+        // ===== SIDEBAR =====
+        function setupSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.add('open');
+                    overlay.classList.add('active');
+                });
+            }
+
+            if (closeSidebar) {
+                closeSidebar.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            }
+        }
+
+        // ===== FUNÇÕES DE UTILIDADE =====
+        function showToast(message, type = 'success') {
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                info: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+            };
+
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: colors[type],
+                    borderRadius: "12px",
+                    padding: "12px 20px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+                }
+            }).showToast();
+        }
+
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading-spinner"></span>';
+            } else {
+                button.disabled = false;
+                button.innerHTML = button.getAttribute('data-original-text') || 'Salvar Usuário';
+            }
+        }
+
+        // ===== CARREGAR USUÁRIOS =====
+        function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const roleClass = getRoleClass(user.role);
+                const statusClass = user.status === 'active' ? 'status-active' : 'status-inactive';
+                const statusText = user.status === 'active' ? 'Ativo' : 'Inativo';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-table">${user.initials}</div>
+                            <div class="user-info-table">
+                                <div class="user-name">${user.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${roleClass}">${user.roleName}</span></td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${user.lastAccess}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action edit" onclick="editUser(${user.id})" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn-action permissions" onclick="viewPermissions(${user.id})" title="Permissões">
+                                <i class="bi bi-shield-lock"></i>
+                            </button>
+                            <button class="btn-action delete" onclick="deleteUser(${user.id})" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function getRoleClass(role) {
+            switch(role) {
+                case 'admin': return 'role-admin';
+                case 'manager': return 'role-manager';
+                case 'operator': return 'role-operator';
+                case 'viewer': return 'role-viewer';
+                default: return '';
+            }
+        }
+
+        // ===== FILTROS =====
+        function filterUsers() {
+            const searchTerm = document.getElementById('searchUser').value.toLowerCase();
+            const roleFilter = document.getElementById('filterRole').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+
+            const filteredUsers = users.filter(user => {
+                const matchesSearch = user.name.toLowerCase().includes(searchTerm) || 
+                                    user.email.toLowerCase().includes(searchTerm);
+                const matchesRole = !roleFilter || user.role === roleFilter;
+                const matchesStatus = !statusFilter || user.status === statusFilter;
+                
+                return matchesSearch && matchesRole && matchesStatus;
+            });
+
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            if (filteredUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Nenhum usuário encontrado</td></tr>';
+                return;
+            }
+
+            filteredUsers.forEach(user => {
+                const roleClass = getRoleClass(user.role);
+                const statusClass = user.status === 'active' ? 'status-active' : 'status-inactive';
+                const statusText = user.status === 'active' ? 'Ativo' : 'Inativo';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar-table">${user.initials}</div>
+                            <div class="user-info-table">
+                                <div class="user-name">${user.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${roleClass}">${user.roleName}</span></td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${user.lastAccess}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action edit" onclick="editUser(${user.id})" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn-action permissions" onclick="viewPermissions(${user.id})" title="Permissões">
+                                <i class="bi bi-shield-lock"></i>
+                            </button>
+                            <button class="btn-action delete" onclick="deleteUser(${user.id})" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ===== MODAL DE USUÁRIO =====
+
+
+
+
+        function openUserModal() {
+            currentUserId = null;
+            document.getElementById('modalTitleText').textContent = 'Novo Usuário';
+            document.getElementById('userForm').reset();
+            
+            // Configurar padrões
+            document.getElementById('userRole').value = 'operator';
+            document.getElementById('userStatus').value = 'active';
+            
+            // Habilitar campos de senha
+            document.getElementById('userPassword').required = true;
+            document.getElementById('confirmPassword').required = true;
+            
+            userModal.show();
+        }
+
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (!user) return;
+
+            currentUserId = id;
+            document.getElementById('modalTitleText').textContent = 'Editar Usuário';
+            
+            // Preencher dados
+            document.getElementById('userName').value = user.name;
+            document.getElementById('userCpf').value = user.cpf || '';
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userPhone').value = user.phone || '';
+            document.getElementById('userRole').value = user.role;
+            document.getElementById('userStatus').value = user.status;
+            document.getElementById('userNotes').value = user.notes || '';
+            
+            // Preencher permissões
+            document.getElementById('permProducts').value = user.permissions.products;
+            document.getElementById('permSales').value = user.permissions.sales;
+            document.getElementById('permReports').value = user.permissions.reports;
+            document.getElementById('permUsers').value = user.permissions.users;
+            document.getElementById('permSettings').value = user.permissions.settings;
+            
+            // Desabilitar campos de senha
+            document.getElementById('userPassword').required = false;
+            document.getElementById('confirmPassword').required = false;
+            document.getElementById('userPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            userModal.show();
+        }
+
+        function togglePermissions() {
+            const role = document.getElementById('userRole').value;
+            
+            // Pré-configurar permissões baseadas no nível
+            switch(role) {
+                case 'admin':
+                    document.getElementById('permProducts').value = 'full';
+                    document.getElementById('permSales').value = 'full';
+                    document.getElementById('permReports').value = 'full';
+                    document.getElementById('permUsers').value = 'full';
+                    document.getElementById('permSettings').value = 'full';
+                    break;
+                case 'manager':
+                    document.getElementById('permProducts').value = 'edit';
+                    document.getElementById('permSales').value = 'edit';
+                    document.getElementById('permReports').value = 'view';
+                    document.getElementById('permUsers').value = 'view';
+                    document.getElementById('permSettings').value = 'none';
+                    break;
+                case 'operator':
+                    document.getElementById('permProducts').value = 'edit';
+                    document.getElementById('permSales').value = 'edit';
+                    document.getElementById('permReports').value = 'none';
+                    document.getElementById('permUsers').value = 'none';
+                    document.getElementById('permSettings').value = 'none';
+                    break;
+                case 'viewer':
+                    document.getElementById('permProducts').value = 'view';
+                    document.getElementById('permSales').value = 'view';
+                    document.getElementById('permReports').value = 'view';
+                    document.getElementById('permUsers').value = 'none';
+                    document.getElementById('permSettings').value = 'none';
+                    break;
+            }
+        }
+
+        function saveUser() {
+            const saveBtn = document.getElementById('saveUserBtn');
+            saveBtn.setAttribute('data-original-text', 'Salvar Usuário');
+            setLoading(saveBtn, true);
+
+            // Validar campos
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const role = document.getElementById('userRole').value;
+
+            if (!name || !email || !role) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                setLoading(saveBtn, false);
+                return;
+            }
+
+            // Validar senha para novos usuários
+            if (!currentUserId) {
+                const password = document.getElementById('userPassword').value;
+                const confirm = document.getElementById('confirmPassword').value;
+                
+                if (!password || password.length < 6) {
+                    showToast('A senha deve ter no mínimo 6 caracteres', 'error');
+                    setLoading(saveBtn, false);
+                    return;
+                }
+                
+                if (password !== confirm) {
+                    showToast('As senhas não coincidem', 'error');
+                    setLoading(saveBtn, false);
+                    return;
+                }
+            }
+
+            // Simular salvamento
+            setTimeout(() => {
+                // Gerar iniciais
+                const nameParts = name.split(' ');
+                const initials = nameParts.length > 1 
+                    ? (nameParts[0][0] + nameParts[1][0]).toUpperCase()
+                    : nameParts[0].substring(0, 2).toUpperCase();
+
+                const roleNames = {
+                    admin: 'Administrador',
+                    manager: 'Gerente',
+                    operator: 'Operador',
+                    viewer: 'Visualizador'
+                };
+
+                const userData = {
+                    id: currentUserId || users.length + 1,
+                    name: name,
+                    email: email,
+                    cpf: document.getElementById('userCpf').value,
+                    phone: document.getElementById('userPhone').value,
+                    role: role,
+                    roleName: roleNames[role],
+                    status: document.getElementById('userStatus').value,
+                    lastAccess: currentUserId ? 'Agora mesmo' : 'Primeiro acesso',
+                    initials: initials,
+                    notes: document.getElementById('userNotes').value,
+                    permissions: {
+                        products: document.getElementById('permProducts').value,
+                        sales: document.getElementById('permSales').value,
+                        reports: document.getElementById('permReports').value,
+                        users: document.getElementById('permUsers').value,
+                        settings: document.getElementById('permSettings').value
+                    }
+                };
+
+                if (currentUserId) {
+                    // Atualizar usuário existente
+                    const index = users.findIndex(u => u.id === currentUserId);
+                    if (index !== -1) {
+                        users[index] = { ...users[index], ...userData };
+                    }
+                    showToast('Usuário atualizado com sucesso!', 'success');
+                } else {
+                    // Adicionar novo usuário
+                    users.push(userData);
+                    showToast('Usuário cadastrado com sucesso!', 'success');
+                }
+
+                loadUsers();
+                filterUsers();
+                userModal.hide();
+                setLoading(saveBtn, false);
+            }, 1500);
+        }
+
+        function deleteUser(id) {
+            if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                users = users.filter(u => u.id !== id);
+                loadUsers();
+                filterUsers();
+                showToast('Usuário excluído com sucesso!', 'success');
+            }
+        }
+
+        // ===== PERMISSÕES =====
+        function viewPermissions(id) {
+            const user = users.find(u => u.id === id);
+            if (!user) return;
+
+            document.getElementById('permUserAvatar').textContent = user.initials;
+            document.getElementById('permUserName').textContent = user.name;
+            
+            const roleClass = getRoleClass(user.role);
+            document.getElementById('permUserRole').className = `role-badge ${roleClass}`;
+            document.getElementById('permUserRole').textContent = user.roleName;
+
+            // Mapear valores de permissão para texto
+            const permMap = {
+                'none': 'Nenhum',
+                'view': 'Visualizar',
+                'edit': 'Editar',
+                'full': 'Total'
+            };
+
+            document.getElementById('permProdValue').textContent = permMap[user.permissions.products] || 'Nenhum';
+            document.getElementById('permSalesValue').textContent = permMap[user.permissions.sales] || 'Nenhum';
+            document.getElementById('permReportsValue').textContent = permMap[user.permissions.reports] || 'Nenhum';
+            document.getElementById('permUsersValue').textContent = permMap[user.permissions.users] || 'Nenhum';
+            document.getElementById('permSettingsValue').textContent = permMap[user.permissions.settings] || 'Nenhum';
+
+            permissionsModal.show();
+        }
+
+        // ===== FORÇA DA SENHA =====
+        function checkPasswordStrength() {
+            const password = document.getElementById('userPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            
+            strengthBar.className = 'password-strength-bar';
+            
+            if (password.length === 0) {
+                strengthBar.style.width = '0';
+                return;
+            }
+            
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 8) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('strength-medium');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+        }
+    </script>
+    <script>
+function verificarLogin(){
+    const token = localStorage.getItem("access");
+
+    if(!token){
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarLogin);
+</script>
+
+<script>
+async function verificarAdmin() {
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const user = await resposta.json();
+
+    if (user.tipo !== "admin") {
+        alert("Apenas administradores podem acessar essa área");
+        window.location.href = "dashboard.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarAdmin);
+</script>
+    <script src="./user.js"></script>
+</body>
+</html>
