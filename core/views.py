@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
+from django.shortcuts import render
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -36,3 +37,8 @@ def criar_funcionario(request):
     user.save()
 
     return Response({"msg": "Funcionário criado com sucesso"})
+
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
