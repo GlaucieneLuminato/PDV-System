@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.shortcuts import render
+from django.http import HttpResponse
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -40,5 +41,7 @@ def criar_funcionario(request):
 
 
 
+
+
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    return HttpResponse("FUNCIONOU A VIEW 🔥")
