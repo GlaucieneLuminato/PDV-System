@@ -1,6 +1,6 @@
-const API_URL = "https://pdv-system-c359.onrender.com";
+const API_URL = "https://pdv-system-c359.onrender.com/api/produtos/";
 const API_BASE = "https://pdv-system-c359.onrender.com";
-const API_PRODUTOS = API_BASE + "produtos/";
+const API_PRODUTOS = API_BASE + "/api/produtos/";
 const API_VENDAS = API_BASE + "vendas/";
 const API_USERS = API_BASE + "users/";
 const API_LOGIN = API_BASE + "login/";
@@ -244,7 +244,7 @@ async function atualizarProduto(id, produto){
 
 async function carregarProdutos(){
     try{
-        const resposta = await fetch(API_URL,{
+        const resposta = await fetch(API_PRODUTOS,{
             headers:{
                 "Authorization": `Bearer ${getToken()}`
             }
@@ -258,7 +258,7 @@ async function carregarProdutos(){
         }
 
         listaProdutos = await resposta.json();
-        console.log("PRODUTOS CLICADOS:", product);
+        console.log("PRODUTOS CLICADOS:", listaProdutos);
         renderizarProdutos(listaProdutos);
 
     } catch(error){
@@ -298,11 +298,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
     verificarLogin();
 
     if(document.querySelector("#tabela-produtos")){
-    carregarProdutos()
-}
-});
+        carregarProdutos();
+    }
 
-document.addEventListener("DOMContentLoaded", ()=>{
     const hoje = new Date();
     const passado = new Date();
 
