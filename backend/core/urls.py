@@ -5,8 +5,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import me
 from .views import me, criar_funcionario
 from django.urls import path
-from .views import dashboard
-
+from .views import dashboard 
+from core.views import teste_debug
 router = DefaultRouter()
 router.register(r'produtos', ProdutoViewSet)
 router.register(r'vendas', VendaViewSet)
@@ -18,6 +18,7 @@ urlpatterns = [
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("me/", me),
     path("criar-funcionario/", criar_funcionario),
+    path("teste/",teste_debug),
 
     path("", include(router.urls)),
 ]

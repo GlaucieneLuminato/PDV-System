@@ -43,5 +43,7 @@ def criar_funcionario(request):
 
 
 
-def dashboard(request):
-    return HttpResponse("FUNCIONOU A VIEW 🔥")
+
+
+def teste_debug(request):
+    return HttpResponse("🔥 DJANGO TÁ RESPONDENDO 🔥")
