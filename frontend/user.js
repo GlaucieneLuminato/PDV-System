@@ -96,47 +96,55 @@ document.addEventListener("DOMContentLoaded", verificarLogin);
 
 async function login(event) {
     event.preventDefault();
+
     const username = document.getElementById("userName").value;
     const password = document.getElementById("userPassword").value;
 
-    const response = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    });
+    try {
+        const response = await fetch("https://pdv-system-c359.onrender.com/login/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        alert("Erro no login!");
-        return;
-    }
-
-    
-    localStorage.setItem("access", data.access);
-
-   
-    const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("access")}`
+        if (!response.ok) {
+            console.error("Erro:", data);
+            alert("Usuário ou senha inválidos!");
+            return;
         }
-    });
 
-    const userData = await userResponse.json();
+        // 🔐 salva tokens
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
 
-    console.log("USER DATA:", userData);
+        // 👤 pega dados do usuário
+        const userResponse = await fetch("https://pdv-system-c359.onrender.com/me/", {
+            headers: {
+                "Authorization": `Bearer ${data.access}`
+            }
+        });
 
-    localStorage.setItem("tipo", userData.tipo);
-    window.location.href = "dashboard.html";
+        const userData = await userResponse.json();
 
-   
+        console.log("USER DATA:", userData);
+
+        localStorage.setItem("tipo", userData.tipo);
+
+        // 🚀 redireciona
+        window.location.href = "dashboard.html";
+
+    } catch (error) {
+        console.error("Erro geral:", error);
+        alert("Erro ao conectar com servidor");
+    }
 }
-
 
 
 
