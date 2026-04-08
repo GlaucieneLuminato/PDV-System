@@ -39,5 +39,8 @@ def criar_funcionario(request):
 
     return Response({"msg": "Funcionário criado com sucesso"})
 
+def dashboard(request):
+    return render(request, "dashboard.html")
+
 def teste_debug(request):
     return HttpResponse("🔥 DJANGO TÁ RESPONDENDO 🔥")
