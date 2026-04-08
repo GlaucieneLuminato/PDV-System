@@ -18,10 +18,11 @@ def me(request):
         tipo = "usuario"
 
     return Response({
-        "username": request.user.username,
-        "is_staff": request.user.is_staff, 
+        "username": user.username,
+        "is_staff": user.is_staff,
+        "is_superuser": user.is_superuser,
+        "tipo": tipo
     })
-    
 
 
 @api_view(['POST'])
@@ -39,8 +40,10 @@ def criar_funcionario(request):
 
     return Response({"msg": "Funcionário criado com sucesso"})
 
+
 def dashboard(request):
     return render(request, "dashboard.html")
+
 
 def teste_debug(request):
     return HttpResponse("🔥 DJANGO TÁ RESPONDENDO 🔥")
