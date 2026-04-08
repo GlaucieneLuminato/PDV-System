@@ -42,3 +42,6 @@ def criar_funcionario(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+def dashboard_view(request):
+    return render(request, 'dashboard.html')
