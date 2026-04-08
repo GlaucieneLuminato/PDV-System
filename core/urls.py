@@ -1,9 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views_api import ProdutoViewSet, VendaViewSet, ItemVendaViewSet, dashboard, UserViewSet
+from .views_api import ProdutoViewSet, VendaViewSet, ItemVendaViewSet, UserViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .views import me, criar_funcionario, dashboard
-from core.views import teste_debug
+from .views import me, criar_funcionario, dashboard, teste_debug
 from django.urls import path
 
 
