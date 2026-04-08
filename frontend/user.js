@@ -1,7 +1,7 @@
 let users = [];
 
 async function carregarUsuarios(){
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/users/", {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("access")}`
         }
@@ -20,7 +20,7 @@ async function saveUser(){
         role: document.getElementById("userRole").value,
     };
 
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/users/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
