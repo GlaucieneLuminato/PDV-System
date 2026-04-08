@@ -1,8 +1,8 @@
-const API_URL = "https://pdv-system-c359.onrender.com/api/produtos/";
+const API_URL = "https://pdv-system-c359.onrender.com/produtos/";
 const API_BASE = "https://pdv-system-c359.onrender.com";
-const API_PRODUTOS = API_BASE + "/api/produtos/";
-const API_VENDAS = API_BASE + "/api/vendas/";
-const API_USERS = API_BASE + "/api/users/";
+const API_PRODUTOS = API_BASE + "/produtos/";
+const API_VENDAS = API_BASE + "/vendas/";
+const API_USERS = API_BASE + "/users/";
 const API_LOGIN = API_BASE + "/login/";
 
 
