@@ -54,7 +54,7 @@ async function fazerLogin(event){
     const senha = document.getElementById("senha").value;
 
     try{
-        const resposta = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
+        const resposta = await fetch("https://pdv-system-c359.onrender.com/login/", {
             method: "POST",
             headers:{
                 "Content-Type": "application/json"
@@ -79,12 +79,11 @@ async function fazerLogin(event){
         console.log("TOKEN:", data.access);
 
       
-        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
+        const userResponse = await fetch("https://pdv-system-c359.onrender.com/users/me/", {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
         });
-
         const userData = await userResponse.json();
         localStorage.setItem("tipo", userData.tipo);
 
