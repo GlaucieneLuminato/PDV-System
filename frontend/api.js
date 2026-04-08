@@ -3,7 +3,7 @@ const API_BASE = "https://pdv-system-c359.onrender.com";
 const API_PRODUTOS = API_BASE + "/api/produtos/";
 const API_VENDAS = API_BASE + "/api/vendas/";
 const API_USERS = API_BASE + "/api/users/";
-const API_LOGIN = API_BASE + "/api/login/";
+const API_LOGIN = API_BASE + "/login/";
 
 
 
