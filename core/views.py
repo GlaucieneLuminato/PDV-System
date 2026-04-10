@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.http import HttpResponse
 
 from .firebase import db  # já aponta para o seu firebase.py com Firestore
 
@@ -46,6 +48,7 @@ def criar_funcionario(request):
     return Response({"msg": "Funcionário criado com sucesso"})
 
 
+<<<<<<< HEAD
 # ===================== PRODUTOS =====================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -103,6 +106,8 @@ def deletar_produto(request, produto_id):
 
 
 # ===================== DASHBOARD E TESTES =====================
+=======
+>>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
 def dashboard(request):
     return render(request, "dashboard.html")
 
