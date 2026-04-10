@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import request, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -27,12 +27,13 @@ class ProdutoViewSet(viewsets.ViewSet):
     def create(self, request):
         data = request.data
 
-        doc_ref = db.collection("produtos").add(data)
+        doc_ref = db.collection("produtos").document()  # cria ID manual
+        doc_ref.set(data)  # salva direto
 
         return Response({
-            "message": "Produto criado no Firebase",
-            "id": doc_ref[1].id
-        }, status=201)
+        "message": "Produto criado no Firebase",
+        "id": doc_ref.id
+    }, status=201)
 
     def retrieve(self, request, pk=None):
         doc = db.collection("produtos").document(pk).get()
