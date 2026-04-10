@@ -49,6 +49,7 @@ def criar_funcionario(request):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # ===================== PRODUTOS =====================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -106,6 +107,8 @@ def deletar_produto(request, produto_id):
 
 
 # ===================== DASHBOARD E TESTES =====================
+=======
+>>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
 =======
 >>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
 def dashboard(request):

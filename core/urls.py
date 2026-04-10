@@ -4,6 +4,11 @@ from .views_api import ProdutoViewSet, VendaViewSet, ItemVendaViewSet, UserViewS
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import me, criar_funcionario, dashboard, teste_debug
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+from django.urls import path
+
+>>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
 =======
 from django.urls import path
 
@@ -28,6 +33,9 @@ urlpatterns = [
     path("me/", me),
     path("criar-funcionario/", criar_funcionario),
     path("teste/",teste_debug),
+<<<<<<< HEAD
+>>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
+=======
 >>>>>>> e2793246d906b2db8610631f43fd2cbca9bcd3f7
 
     # Inclui todas as rotas do router (API com Firebase)
