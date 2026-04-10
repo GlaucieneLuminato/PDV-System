@@ -14,7 +14,7 @@ import datetime
 class ProdutoViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        produtos_ref = db.collection("produtos").stream()
+        produtos_ref = db.collection("produtos").limit(10).stream()
         produtos = []
 
         for doc in produtos_ref:
