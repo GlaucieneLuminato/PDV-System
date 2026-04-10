@@ -1,10 +1,15 @@
-from rest_framework.response import Response 
+# core/views.py
+from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
+from .firebase import db  # já aponta para o seu firebase.py com Firestore
+
+
+# ===================== AUTENTICAÇÃO E PERFIL =====================
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def me(request):
@@ -41,6 +46,63 @@ def criar_funcionario(request):
     return Response({"msg": "Funcionário criado com sucesso"})
 
 
+# ===================== PRODUTOS =====================
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def listar_produtos(request):
+    produtos_ref = db.collection('produtos')
+    produtos_docs = produtos_ref.stream()
+    produtos = []
+    for doc in produtos_docs:
+        p = doc.to_dict()
+        p['id'] = doc.id
+        produtos.append(p)
+    return Response(produtos)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def criar_produto(request):
+    dados = request.data
+    produto_ref = db.collection('produtos').document()
+    produto_ref.set({
+        'nome': dados.get('nome'),
+        'sku': dados.get('sku'),
+        'categoria': dados.get('categoria', 'Eletrônicos'),
+        'preco_custo': float(dados.get('preco_custo', 0)),
+        'preco': float(dados.get('preco')),
+        'estoque': int(dados.get('estoque', 0)),
+        'status': True
+    })
+    return Response({"msg": "Produto criado com sucesso"})
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def atualizar_produto(request, produto_id):
+    dados = request.data
+    produto_ref = db.collection('produtos').document(produto_id)
+    produto_ref.update({
+        'nome': dados.get('nome'),
+        'sku': dados.get('sku'),
+        'categoria': dados.get('categoria', 'Eletrônicos'),
+        'preco_custo': float(dados.get('preco_custo', 0)),
+        'preco': float(dados.get('preco')),
+        'estoque': int(dados.get('estoque', 0)),
+        'status': dados.get('status', True)
+    })
+    return Response({"msg": "Produto atualizado com sucesso"})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deletar_produto(request, produto_id):
+    produto_ref = db.collection('produtos').document(produto_id)
+    produto_ref.delete()
+    return Response({"msg": "Produto deletado com sucesso"})
+
+
+# ===================== DASHBOARD E TESTES =====================
 def dashboard(request):
     return render(request, "dashboard.html")
 

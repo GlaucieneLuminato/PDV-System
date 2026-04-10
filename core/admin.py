@@ -1,31 +1,41 @@
-from django.contrib import admin
-from .models import Produto,Venda,ItemVenda
+#from django.contrib import admin
+#from django.urls import path
+#from django.shortcuts import render
+#from core.firebase import db  # importa sua conexão Firebase
 
-class ItemVendaInline(admin.TabularInline):
-    model = ItemVenda
-    extra = 1
+#class FirebaseAdminSite(admin.AdminSite):
+#    site_header = "Admin PDV Firebase"
 
-class VendaAdmin(admin.ModelAdmin):
-    inlines = [ItemVendaInline]
-    list_display = ("id","data_venda","total")
+#admin_site = FirebaseAdminSite(name="firebase_admin")
 
-class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ("nome","preco","estoque","estoque_baixo","criado_em")
-    search_fields = ("nome","sku")
-    list_filter = ("categoria","status")
-    
-    def estoque_baixo(self,obj):
-        return obj.estoque < 5 
-    estoque_baixo.boolean = True
-    estoque_baixo.short_description = "Estoque Baixo"
+# --- VIEWS CUSTOMIZADAS ---
 
-class ItemVendaAdmin(admin.ModelAdmin):
-    list_display = ("venda","produto","quantidade","preco_unitario")
+#def produtos_firebase_view(request):
+    # Busca produtos no Firebase
+ #   produtos = db.collection("produtos").stream()
+  #  context = {"produtos": [p.to_dict() for p in produtos]}
+   # return render(request, "admin/produtos.html", context)
 
+#def vendas_firebase_view(request):
+ #   vendas = db.collection("vendas").stream()
+  #  context = {"vendas": [v.to_dict() for v in vendas]}
+   # return render(request, "admin/vendas.html", context)
 
+#def itensvenda_firebase_view(request):
+ #   itens = db.collection("itensvenda").stream()
+  #  context = {"itens": [i.to_dict() for i in itens]}
+   # return render(request, "admin/itensvenda.html", context)
 
-admin.site.register(Produto,ProdutoAdmin)
-admin.site.register(Venda,VendaAdmin)
-admin.site.register(ItemVenda,ItemVendaAdmin)
+# --- REGISTRO DAS URLs CUSTOMIZADAS ---
 
+#def get_urls():
+ #   urls = [
+  #      path('produtos/', admin_site.admin_view(produtos_firebase_view), name='produtos'),
+   #     path('vendas/', admin_site.admin_view(vendas_firebase_view), name='vendas'),
+    #    path('itensvenda/', admin_site.admin_view(itensvenda_firebase_view), name='itensvenda'),
+    #]
+ #   return urls + admin_site.get_urls_original()
 
+# Mantém a URL padrão do Django Admin
+#admin_site.get_urls_original = admin_site.get_urls
+#admin_site.get_urls = get_urls
