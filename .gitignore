@@ -17,3 +17,18 @@ db.sqlite3
 
 # Logs
 *.log 
+
+#serviceAccountKey.json
+{
+  "type": "service_account",
+  "project_id": "pdv-system-bbef4",
+  "private_key_id": "03136d96e5e2fcc27542dde48d73454be4cc5fb0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC/jmZ+kCWQnXPP\nWXS3xGHBv7eCOFTlt0UJpt12ssSGuFQD1X2ePNarFCKKxf4SNjMRFp0fxk1rmk06\nCGJADZu7pSOjgHx5TBXpgO4vQhkUpz1pGYls8iI9HV0156wmFiXCxNHyEm3uGc7a\nrMpUXlElhYExwC2ndiZ06DSIEjKhfjw1qnfXJvX8nlAH/IMa1rNhusaFI+xXgcb8\nSidv4Gtq9FV9PSEynFd4oJXWY+sGzXxeib5ebfe33Y+tEf6xaUiZ99H7RFLVEzAz\nMUuBbNVJ2h1HwUTJTIAeV9bKDdjqcht0JsqzDoQdOKcQvR1i0sLu8X4lpGGBVcpH\n6RDcMdEvAgMBAAECggEAD1l2ThL356AuTQGykB0s5i0aI9Wmu+eVISJdYasOg2sW\n1F3RnJHsc7X/1JXr94KfUfG5cnfd8U7ifFF6qf5NKdqgQfRERSX7JYRe0aueveBu\n09Knh/LZGoOVWgHv8fdZXEOQPTEL3QX1ZOFurxcFspeBlD59igs2Jq0KtJKcuwLy\nO2Wf1HlEv0IiRt45UkLrNx4J3g2iQHhI4mQZcn1oEcqYw9hIFrp/vxUO3vUXvRY3\nOQoMXfHAMeLtmyx6D/4cx4vcSIVfhJ2uzWir/tKRBNfiHsIjH3sQeJ+fJ0Aimz2h\ni9LEljzv/aN4T4P7HJ2n7t4r4wtssDiXGd84nOZN1QKBgQD88AwBKKkbYMgkv26n\nA0IyrJNQbyHzl8+lZ2MDGw9qGu3bwFCftzit50ASg+2NoEBpuDbySfQtbmZaMnqH\nLMqUu2Mku8vOnYU7eS5LVS6/LPFeDDcjd8H0q0QTD0zHwQGvCFionJdze09ANW1/\ncEmq5XYB45fkIUJr8+mVpHEq2wKBgQDB4Bu8HkpRCmcelZ/pYGwXgfsTtURstxcL\n7dHriRsTJQu80WuL1ycxFVKru8J/58i/6XXmejUAACSIXq3tnIvyHOXyq7t+idTQ\nrEpZFuNNDmlSUpv0DN7bUF022qVJpHesSH8RfSCM76RtBiVxmz09WjpxcyWuXCNL\nGVBnWNtBPQKBgQD4rkH/OazZwBPHHXd7ONby332OzVTCHHYJF1bfjNFg7s0BC1m5\nTfip8fyqt47teasaxgUvvcoWiL6U26BgGoeqJ3pYeVLt9y0wxfngEwX87AD7CGOF\nuY62MVSisJ46nuY64qfYTu0QmyHV7TGU5B9pqGSXgt6papHVdWAowh6JlQKBgDUC\nULMD2TAFVyKeqIWH7qYSzRKbamULPortcIslBrkaVPZAkFZA8p9SBDOed9S/DD2k\n2K621Uz1vQdoU8f3GLCPRDQwzmgPyZdwtDddsbJ88UEoAyocZsayV3pLGAxloq8B\nd3TRsJe4Yk3I8233kyv2QqqIYFInMSM0fa50NibFAoGBAOwmiQk48MbE/H2Wivt4\n1jG0UPKuCbO5EPgMeS+45Duoom4tsD7e41WnkQtaurXIOnrx7y4WFRivj6uurU8V\nlrI291S93Q5cdDqpiqEYCNNwve+6iYs9sVlDBe1I3kUjldqwa9zMEtYte6HmY7u1\nKK++py8RvHgMxpq7FipYQZQO\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@pdv-system-bbef4.iam.gserviceaccount.com",
+  "client_id": "117078372543813797423",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40pdv-system-bbef4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
