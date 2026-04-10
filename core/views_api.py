@@ -1,9 +1,8 @@
-from rest_framework import request, viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
 from django.contrib.auth.models import User
-from .serializers import ProdutoSerializer, VendaSerializer, ItemVendaSerializer, UserSerializer
+from .serializers import UserSerializer
 from core.firebase import db
 import datetime
 
@@ -11,55 +10,63 @@ import datetime
 # =========================
 # PRODUTOS (FIRESTORE)
 # =========================
-
 class ProdutoViewSet(viewsets.ViewSet):
 
  def list(self, request):
     try:
-        produtos_ref = db.collection("produtos").limit(10).stream()
-        produtos = []
+        import time
+        start = time.time()
 
-        for doc in produtos_ref:
+        docs = db.collection("produtos").limit(5).get()
+
+        tempo = time.time() - start
+
+        produtos = []
+        for doc in docs:
             data = doc.to_dict()
             data["id"] = doc.id
             produtos.append(data)
 
-        return Response(produtos)
+        return Response({
+            "tempo": tempo,
+            "dados": produtos
+        })
 
     except Exception as e:
         return Response({"erro": str(e)}, status=500)
-    
 
-def create(self, request):
-        data = request.data
-
-        doc_ref = db.collection("produtos").document()  # cria ID manual
-        doc_ref.set(data)  # salva direto
-
-        return Response({
-        "message": "Produto criado no Firebase",
-        "id": doc_ref.id
-    }, status=201)
 
 def retrieve(self, request, pk=None):
-        doc = db.collection("produtos").document(pk).get()
+        try:
+            doc = db.collection("produtos").document(pk).get()
 
-        if doc.exists:
-            data = doc.to_dict()
-            data["id"] = doc.id
-            return Response(data)
+            if doc.exists:
+                data = doc.to_dict()
+                data["id"] = doc.id
+                return Response(data)
 
-        return Response({"error": "Produto não encontrado"}, status=404)
+            return Response({"error": "Produto não encontrado"}, status=404)
+
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
+
 
 def update(self, request, pk=None):
-        db.collection("produtos").document(pk).update(request.data)
+        try:
+            db.collection("produtos").document(pk).update(request.data)
+            return Response({"message": "Produto atualizado"})
 
-        return Response({"message": "Produto atualizado"})
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
+
 
 def destroy(self, request, pk=None):
-        db.collection("produtos").document(pk).delete()
+        try:
+            db.collection("produtos").document(pk).delete()
+            return Response({"message": "Produto deletado"})
 
-        return Response({"message": "Produto deletado"})
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
 
 
 # =========================
@@ -68,27 +75,36 @@ def destroy(self, request, pk=None):
 class VendaViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        vendas_ref = db.collection("vendas").stream()
-        vendas = []
+        try:
+            docs = db.collection("vendas").limit(20).get()
+            vendas = []
 
-        for doc in vendas_ref:
-            data = doc.to_dict()
-            data["id"] = doc.id
-            vendas.append(data)
+            for doc in docs:
+                data = doc.to_dict()
+                data["id"] = doc.id
+                vendas.append(data)
 
-        return Response(vendas)
+            return Response(vendas)
+
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
+
 
     def create(self, request):
-        data = request.data
+        try:
+            data = request.data
+            data["data_venda"] = datetime.datetime.now().isoformat()
 
-        data["data_venda"] = datetime.datetime.now().isoformat()
+            doc_ref = db.collection("vendas").document()
+            doc_ref.set(data)
 
-        doc_ref = db.collection("vendas").add(data)
+            return Response({
+                "message": "Venda criada",
+                "id": doc_ref.id
+            }, status=201)
 
-        return Response({
-            "message": "Venda criada",
-            "id": doc_ref[1].id
-        }, status=201)
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
 
 
 # =========================
@@ -97,29 +113,39 @@ class VendaViewSet(viewsets.ViewSet):
 class ItemVendaViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        itens_ref = db.collection("itens_venda").stream()
-        itens = []
+        try:
+            docs = db.collection("itens_venda").limit(20).get()
+            itens = []
 
-        for doc in itens_ref:
-            data = doc.to_dict()
-            data["id"] = doc.id
-            itens.append(data)
+            for doc in docs:
+                data = doc.to_dict()
+                data["id"] = doc.id
+                itens.append(data)
 
-        return Response(itens)
+            return Response(itens)
+
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
+
 
     def create(self, request):
-        data = request.data
+        try:
+            data = request.data
 
-        doc_ref = db.collection("itens_venda").add(data)
+            doc_ref = db.collection("itens_venda").document()
+            doc_ref.set(data)
 
-        return Response({
-            "message": "Item criado",
-            "id": doc_ref[1].id
-        }, status=201)
+            return Response({
+                "message": "Item criado",
+                "id": doc_ref.id
+            }, status=201)
+
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
 
 
 # =========================
-# USERS (continua Django)
+# USERS (Django)
 # =========================
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
