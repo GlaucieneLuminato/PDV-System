@@ -11,9 +11,11 @@ import datetime
 # =========================
 # PRODUTOS (FIRESTORE)
 # =========================
+
 class ProdutoViewSet(viewsets.ViewSet):
 
-    def list(self, request):
+ def list(self, request):
+    try:
         produtos_ref = db.collection("produtos").limit(10).stream()
         produtos = []
 
@@ -24,7 +26,11 @@ class ProdutoViewSet(viewsets.ViewSet):
 
         return Response(produtos)
 
-    def create(self, request):
+    except Exception as e:
+        return Response({"erro": str(e)}, status=500)
+    
+
+def create(self, request):
         data = request.data
 
         doc_ref = db.collection("produtos").document()  # cria ID manual
@@ -35,7 +41,7 @@ class ProdutoViewSet(viewsets.ViewSet):
         "id": doc_ref.id
     }, status=201)
 
-    def retrieve(self, request, pk=None):
+def retrieve(self, request, pk=None):
         doc = db.collection("produtos").document(pk).get()
 
         if doc.exists:
@@ -45,12 +51,12 @@ class ProdutoViewSet(viewsets.ViewSet):
 
         return Response({"error": "Produto não encontrado"}, status=404)
 
-    def update(self, request, pk=None):
+def update(self, request, pk=None):
         db.collection("produtos").document(pk).update(request.data)
 
         return Response({"message": "Produto atualizado"})
 
-    def destroy(self, request, pk=None):
+def destroy(self, request, pk=None):
         db.collection("produtos").document(pk).delete()
 
         return Response({"message": "Produto deletado"})
