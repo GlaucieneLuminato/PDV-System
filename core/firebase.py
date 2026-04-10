@@ -1,14 +1,17 @@
-# core/firebase.py
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
+import json
 
-# Caminho da chave JSON do Firebase (você vai colocar dentro da pasta core/firebase)
-cred_path = os.path.join(os.path.dirname(__file__), 'serviceAccountKey.json')
-cred = credentials.Certificate(cred_path)
+if not firebase_admin._apps:
+    cred_json = os.environ.get("FIREBASE_CREDENTIALS")
 
-# Inicializa o Firebase
-firebase_admin.initialize_app(cred)
+    if not cred_json:
+        raise ValueError("FIREBASE_CREDENTIALS não encontrado")
 
-# Cria o cliente para o Firestore
+    cred_dict = json.loads(cred_json)
+    cred = credentials.Certificate(cred_dict)
+
+    firebase_admin.initialize_app(cred)
+
 db = firestore.client()
