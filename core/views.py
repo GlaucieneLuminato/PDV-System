@@ -8,7 +8,17 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .firebase import db  # já aponta para o seu firebase.py com Firestore
+from .firebase import db # já aponta para o seu firebase.py com Firestore
+
+
+
+@api_view(["GET"])
+def teste_firebase(request):
+    try:
+        db.collection("teste").document("1").set({"ok": True})
+        return Response({"status": "Firebase OK"})
+    except Exception as e:
+        return Response({"erro": str(e)})
 
 
 # ===================== AUTENTICAÇÃO E PERFIL =====================
@@ -102,6 +112,8 @@ def deletar_produto(request, produto_id):
     produto_ref = db.collection('produtos').document(produto_id)
     produto_ref.delete()
     return Response({"msg": "Produto deletado com sucesso"})
+
+
 
 
 # ===================== DASHBOARD E TESTES =====================
