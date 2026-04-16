@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
-from core.firebase import db
+from core.firebase import get_firestore_db
 import datetime
 
 
@@ -12,32 +12,40 @@ import datetime
 # =========================
 class ProdutoViewSet(viewsets.ViewSet):
 
- def list(self, request):
-    try:
-        import time
-        start = time.time()
-
-        docs = db.collection("produtos").limit(5).get()
-
-        tempo = time.time() - start
-
-        produtos = []
-        for doc in docs:
-            data = doc.to_dict()
-            data["id"] = doc.id
-            produtos.append(data)
-
-        return Response({
-            "tempo": tempo,
-            "dados": produtos
-        })
-
-    except Exception as e:
-        return Response({"erro": str(e)}, status=500)
-
-
-def retrieve(self, request, pk=None):
+    def list(self, request):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
+            import time
+            start = time.time()
+
+            docs = db.collection("produtos").limit(5).get()
+
+            tempo = time.time() - start
+
+            produtos = []
+            for doc in docs:
+                data = doc.to_dict()
+                data["id"] = doc.id
+                produtos.append(data)
+
+            return Response({
+                "tempo": tempo,
+                "dados": produtos
+            })
+
+        except Exception as e:
+            return Response({"erro": str(e)}, status=500)
+
+
+    def retrieve(self, request, pk=None):
+        try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             doc = db.collection("produtos").document(pk).get()
 
             if doc.exists:
@@ -51,8 +59,12 @@ def retrieve(self, request, pk=None):
             return Response({"erro": str(e)}, status=500)
 
 
-def update(self, request, pk=None):
+    def update(self, request, pk=None):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             db.collection("produtos").document(pk).update(request.data)
             return Response({"message": "Produto atualizado"})
 
@@ -60,8 +72,12 @@ def update(self, request, pk=None):
             return Response({"erro": str(e)}, status=500)
 
 
-def destroy(self, request, pk=None):
+    def destroy(self, request, pk=None):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             db.collection("produtos").document(pk).delete()
             return Response({"message": "Produto deletado"})
 
@@ -76,6 +92,10 @@ class VendaViewSet(viewsets.ViewSet):
 
     def list(self, request):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             docs = db.collection("vendas").limit(20).get()
             vendas = []
 
@@ -92,6 +112,10 @@ class VendaViewSet(viewsets.ViewSet):
 
     def create(self, request):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             data = request.data
             data["data_venda"] = datetime.datetime.now().isoformat()
 
@@ -114,6 +138,10 @@ class ItemVendaViewSet(viewsets.ViewSet):
 
     def list(self, request):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             docs = db.collection("itens_venda").limit(20).get()
             itens = []
 
@@ -130,6 +158,10 @@ class ItemVendaViewSet(viewsets.ViewSet):
 
     def create(self, request):
         try:
+            db = get_firestore_db()
+            if not db:
+                return Response({"erro": "Firebase indisponível"}, status=500)
+
             data = request.data
 
             doc_ref = db.collection("itens_venda").document()

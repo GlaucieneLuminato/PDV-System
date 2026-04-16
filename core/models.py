@@ -1,5 +1,5 @@
-# core/models.py (adaptado para Firestore)
-from .firebase import db
+# core/models.py (corrigido)
+
 from decimal import Decimal
 from datetime import datetime
 
@@ -16,18 +16,6 @@ class Produto:
         self.estoque = int(estoque)
         self.status = status
 
-    def salvar(self):
-        if self.id:
-            db.collection("produtos").document(self.id).update(self.to_dict())
-        else:
-            doc_ref = db.collection("produtos").document()
-            self.id = doc_ref.id
-            doc_ref.set(self.to_dict())
-
-    def deletar(self):
-        if self.id:
-            db.collection("produtos").document(self.id).delete()
-
     def to_dict(self):
         return {
             "nome": self.nome,
@@ -38,16 +26,6 @@ class Produto:
             "estoque": self.estoque,
             "status": self.status
         }
-
-    @staticmethod
-    def listar_todos():
-        produtos_ref = db.collection("produtos").stream()
-        produtos = []
-        for doc in produtos_ref:
-            data = doc.to_dict()
-            data['id'] = doc.id
-            produtos.append(data)
-        return produtos
 
 
 # ------------------------ VENDA ------------------------
@@ -66,24 +44,6 @@ class Venda:
             total += Decimal(item.subtotal())
         return float(total)
 
-    def salvar(self):
-        if not self.id:
-            doc_ref = db.collection("vendas").document()
-            self.id = doc_ref.id
-        else:
-            doc_ref = db.collection("vendas").document(self.id)
-
-        # Salvar a venda
-        doc_ref.set({
-            "data_venda": self.data_venda,
-            "total": self.total()
-        })
-
-        # Salvar itens
-        for item in self.itens:
-            item.venda_id = self.id
-            item.salvar()
-
 
 # ------------------------ ITEM VENDA ------------------------
 class ItemVenda:
@@ -97,35 +57,6 @@ class ItemVenda:
     def subtotal(self):
         return self.quantidade * self.preco_unitario
 
-    def salvar(self):
-        if self.quantidade > self.produto.estoque:
-            raise ValueError("Estoque insuficiente para este item.")
-
-        if not self.id:
-            doc_ref = db.collection("itens_venda").document()
-            self.id = doc_ref.id
-        else:
-            doc_ref = db.collection("itens_venda").document(self.id)
-
-        doc_ref.set({
-            "venda_id": self.venda_id,
-            "produto_id": self.produto.id,
-            "produto_nome": self.produto.nome,
-            "quantidade": self.quantidade,
-            "preco_unitario": self.preco_unitario,
-            "subtotal": self.subtotal()
-        })
-
-        # Atualiza estoque do produto
-        self.produto.estoque -= self.quantidade
-        self.produto.salvar()
-
-    def deletar(self):
-        if self.id:
-            db.collection("itens_venda").document(self.id).delete()
-            self.produto.estoque += self.quantidade
-            self.produto.salvar()
-
 
 # ------------------------ FUNCIONÁRIO ------------------------
 class Funcionario:
@@ -135,21 +66,3 @@ class Funcionario:
         self.telefone = telefone
         self.data_nascimento = data_nascimento
         self.cpf = cpf
-
-    def salvar(self):
-        if not self.id:
-            doc_ref = db.collection("funcionarios").document()
-            self.id = doc_ref.id
-        else:
-            doc_ref = db.collection("funcionarios").document(self.id)
-
-        doc_ref.set({
-            "username": self.username,
-            "telefone": self.telefone,
-            "data_nascimento": self.data_nascimento,
-            "cpf": self.cpf
-        })
-
-    def deletar(self):
-        if self.id:
-            db.collection("funcionarios").document(self.id).delete()
