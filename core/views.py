@@ -87,7 +87,7 @@ def listar_produtos(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+
 def criar_produto(request):
     try:
         db = get_firestore_db()

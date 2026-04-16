@@ -2,8 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views_api import ProdutoViewSet, VendaViewSet, ItemVendaViewSet, UserViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .views import me, criar_funcionario, dashboard, teste_debug
-
+from .views import me, criar_funcionario, dashboard, teste_debug, teste_firebase
+from core.views import criar_produto
 from django.urls import path
 
 
@@ -22,8 +22,8 @@ urlpatterns = [
     path("me/", me, name="me"),
     path("criar-funcionario/", criar_funcionario, name="criar_funcionario"),
     path("teste/", teste_debug, name="teste"),
-
-
+    path("produtos/criar/", criar_produto),
+    path("teste-firebase/", teste_firebase),
     # Inclui todas as rotas do router (API com Firebase)
     path("", include(router.urls)),
 ]
