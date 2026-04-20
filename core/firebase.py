@@ -9,13 +9,18 @@ load_dotenv()
 
 def get_firestore_db():
     try:
+        # Evita reinicializar o Firebase várias vezes
         if not firebase_admin._apps:
             cred_json = os.getenv("FIREBASE_CREDENTIALS")
 
             if not cred_json:
-                raise ValueError("FIREBASE_CREDENTIALS não encontrado")
+                raise Exception("FIREBASE_CREDENTIALS não encontrado no ambiente")
+
+            # 🔥 Corrige problema de quebra de linha
+            cred_json = cred_json.replace('\\n', '\n')
 
             cred_dict = json.loads(cred_json)
+
             cred = credentials.Certificate(cred_dict)
 
             firebase_admin.initialize_app(cred)
@@ -23,5 +28,5 @@ def get_firestore_db():
         return firestore.client()
 
     except Exception as e:
-        print("Erro ao conectar com Firebase:", e)
+        print("🔥 ERRO FIREBASE:", str(e))
         return None
