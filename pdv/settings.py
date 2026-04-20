@@ -1,3 +1,14 @@
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 🔥 CARREGA O .ENV AQUI (global)
+load_dotenv(BASE_DIR / ".env")
+
+
+
 """
 Django settings for pdv project.
 

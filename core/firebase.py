@@ -3,21 +3,19 @@ import os
 import json
 import firebase_admin
 from firebase_admin import credentials, firestore
+from pathlib import Path
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 def get_firestore_db():
     try:
-        # Evita reinicializar o Firebase várias vezes
         if not firebase_admin._apps:
             cred_json = os.getenv("FIREBASE_CREDENTIALS")
 
             if not cred_json:
-                raise Exception("FIREBASE_CREDENTIALS não encontrado no ambiente")
-
-            # 🔥 Corrige problema de quebra de linha
-            cred_json = cred_json.replace('\\n', '\n')
+                raise Exception("FIREBASE_CREDENTIALS não encontrado")
 
             cred_dict = json.loads(cred_json)
 
@@ -25,8 +23,10 @@ def get_firestore_db():
 
             firebase_admin.initialize_app(cred)
 
+            print("✅ Firebase inicializado com sucesso")
+
         return firestore.client()
 
     except Exception as e:
-        print("🔥 ERRO FIREBASE:", str(e))
+        print("🔥 ERRO REAL FIREBASE:", repr(e))  # 👈 aqui muda tudo
         return None
