@@ -21,7 +21,7 @@ class ProdutoViewSet(viewsets.ViewSet):
             import time
             start = time.time()
 
-            docs = db.collection("produtos").limit(5).get()
+            docs = db.collection("produtos").limit(5).stream()
 
             tempo = time.time() - start
 
@@ -96,7 +96,7 @@ class VendaViewSet(viewsets.ViewSet):
             if not db:
                 return Response({"erro": "Firebase indisponível"}, status=500)
 
-            docs = db.collection("vendas").limit(20).get()
+            docs = db.collection("vendas").limit(20).stream()
             vendas = []
 
             for doc in docs:
@@ -142,7 +142,7 @@ class ItemVendaViewSet(viewsets.ViewSet):
             if not db:
                 return Response({"erro": "Firebase indisponível"}, status=500)
 
-            docs = db.collection("itens_venda").limit(20).get()
+            docs = db.collection("itens_venda").limit(20).stream()
             itens = []
 
             for doc in docs:
