@@ -1016,124 +1016,115 @@ Produto em promoção até fim do mês</textarea
 
     <!-- Scripts -->
 
-    <script>
-      // Funções para ações de produtos
-      function editarProduto(id) {
-        console.log("Editando produto:", id);
-        // Aqui você carregaria os dados do produto do backend
+   <script>
+const API_URL = "https://pdv-system-c359.onrender.com/api";
+
+// 🔐 PEGAR TOKEN
+function getToken() {
+  return localStorage.getItem("access");
+}
+
+// 🔥 LISTAR PRODUTOS DO BACKEND
+async function carregarProdutos() {
+  try {
+    const response = await fetch(`${API_URL}/produtos/`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
       }
+    });
 
-      function excluirProduto(id) {
-        if (confirm("Tem certeza que deseja excluir este produto?")) {
-          console.log("Excluindo produto:", id);
-          // Aqui você enviaria a requisição de exclusão
-          alert("Produto excluído com sucesso!");
-        }
+    const data = await response.json();
+
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    data.forEach((produto) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${produto.nome}</td>
+          <td>${produto.sku}</td>
+          <td>${produto.categoria}</td>
+          <td>R$ ${produto.preco}</td>
+          <td>${produto.estoque}</td>
+          <td>${produto.status ? "Ativo" : "Inativo"}</td>
+          <td>
+            <button onclick="excluirProduto('${produto.id}')">Excluir</button>
+          </td>
+        </tr>
+      `;
+    });
+
+  } catch (error) {
+    console.error("Erro ao carregar produtos:", error);
+  }
+}
+
+// 🔥 EXCLUIR PRODUTO
+async function excluirProduto(id) {
+  if (!confirm("Deseja excluir?")) return;
+
+  try {
+    await fetch(`${API_URL}/produtos/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
       }
+    });
 
-      // Preview de imagem ao selecionar arquivo
-      document
-        .getElementById("productImage")
-        ?.addEventListener("change", function (e) {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              // Aqui você pode mostrar um preview da imagem
-              console.log("Imagem selecionada");
-            };
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
+    carregarProdutos();
 
-      document
-        .getElementById("editProductImage")
-        ?.addEventListener("change", function (e) {
-          if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              // Aqui você pode atualizar o preview da imagem
-              console.log("Nova imagem selecionada");
-            };
-            reader.readAsDataURL(e.target.files[0]);
-          }
-        });
+  } catch (error) {
+    console.error("Erro ao excluir:", error);
+  }
+}
 
-      // Cálculo automático de lucro
+// 🔥 CADASTRAR PRODUTO
+document.getElementById("formCadastrarProduto")
+?.addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-      if (custoInput && vendaInput && lucroInput) {
-        function calcularLucro() {
-          const custo = parseFloat(custoInput.value) || 0;
-          const venda = parseFloat(vendaInput.value) || 0;
-          if (custo > 0 && venda > 0) {
-            const lucro = (((venda - custo) / custo) * 100).toFixed(1);
-            lucroInput.value = lucro;
-          }
-        }
+  const inputs = this.querySelectorAll("input");
 
-        custoInput.addEventListener("input", calcularLucro);
-        vendaInput.addEventListener("input", calcularLucro);
-      }
+  const produto = {
+    nome: inputs[0].value,
+    sku: inputs[1].value,
+    categoria: "Eletrônicos",
+    preco: inputs[3].value,
+    estoque: inputs[4].value
+  };
 
-      // Filtros de pesquisa
-      const searchInput = document.querySelector(".nav-search input");
-      if (searchInput) {
-        searchInput.addEventListener("keyup", function (e) {
-          const termo = e.target.value.toLowerCase();
-          const linhas = document.querySelectorAll("tbody tr");
+  try {
+    await fetch(`${API_URL}/produtos/criar/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(produto)
+    });
 
-          linhas.forEach((linha) => {
-            const texto = linha.textContent.toLowerCase();
-            if (texto.includes(termo)) {
-              linha.style.display = "";
-            } else {
-              linha.style.display = "none";
-            }
-          });
-        });
-      }
+    alert("Produto criado!");
+    carregarProdutos();
 
-      // Exportar dados (simulação)
-      document
-        .querySelector(".btn-add-product")
-        ?.addEventListener("click", function () {
-          // Abre o modal de cadastro automaticamente pelo data-bs-toggle
-        });
+  } catch (error) {
+    console.error("Erro ao criar:", error);
+  }
+});
 
-      // Atalho de teclado para novo produto (Ctrl + N)
-      document.addEventListener("keydown", function (e) {
-        if (e.ctrlKey && e.key === "n") {
-          e.preventDefault();
-          const modal = new bootstrap.Modal(
-            document.getElementById("modalCadastrarProduto"),
-          );
-          modal.show();
-        }
-        a;
-      });
-    </script>
+// 🔐 VERIFICAR LOGIN
+function verificarLogin() {
+  const token = getToken();
 
-    <script>
-      function verificarLogin() {
-        const token = localStorage.getItem("access");
+  if (!token) {
+    alert("Você precisa estar logado");
+    window.location.href = "login.html";
+  }
+}
 
-        if (!token) {
-          alert("Você precisa estar logado");
-          window.location.href = "login.html";
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        verificarLogin();
-      });
-    </script>
-
-    <script>
-      function logout() {
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-
-        window.location.href = "login.html";
-      }
-    </script>
-  </body>
-</html>
+// 🚀 INICIAR
+document.addEventListener("DOMContentLoaded", () => {
+  verificarLogin();
+  carregarProdutos();
+});
+</script>
