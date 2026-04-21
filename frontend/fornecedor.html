@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StockMaster - Gestão de Fornecedores</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -25,9 +25,11 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <button class="close-sidebar" id="closeSidebar">
-            <i class="bi bi-x"></i>
-        </button>
+        <button class="close-sidebar"
+        id="closeSidebar"
+        aria-label="Fechar menu lateral">
+    <i class="bi bi-x" aria-hidden="true"></i>
+</button>
         
         <div class="sidebar-header">
             <div class="logo">
@@ -52,9 +54,11 @@
     <div class="main-content" id="mainContent">
         <!-- Top Navigation -->
         <div class="top-nav">
-            <button class="menu-toggle" id="menuToggle">
-                <i class="bi bi-list"></i>
-            </button>
+         <button class="menu-toggle"
+        id="menuToggle"
+        aria-label="Abrir menu">
+    <i class="bi bi-list" aria-hidden="true"></i>
+</button>
             
             <div class="nav-search">
                 <i class="bi bi-search"></i>
@@ -143,28 +147,34 @@
         <div class="filters-section">
             <div class="filter-group">
                 <i class="bi bi-funnel"></i>
-                <select id="statusFilter" onchange="filterSuppliers()">
-                    <option value="">Todos os Status</option>
-                    <option value="active">Ativos</option>
-                    <option value="inactive">Inativos</option>
-                </select>
+             <label for="statusFilter" class="form-label">Status</label>
+
+<select id="statusFilter" onchange="filterSuppliers()">
+    <option value="">Todos os Status</option>
+    <option value="active">Ativos</option>
+    <option value="inactive">Inativos</option>
+</select>
             </div>
             
             <div class="filter-group">
                 <i class="bi bi-star"></i>
-                <select id="ratingFilter" onchange="filterSuppliers()">
-                    <option value="">Todas as Classificações</option>
-                    <option value="5">5 Estrelas</option>
-                    <option value="4">4+ Estrelas</option>
-                    <option value="3">3+ Estrelas</option>
-                </select>
+              <label for="ratingFilter" class="form-label">Classificação</label>
+
+<select id="ratingFilter" onchange="filterSuppliers()">
+    <option value="">Todas as Classificações</option>
+    <option value="5">5 Estrelas</option>
+    <option value="4">4+ Estrelas</option>
+    <option value="3">3+ Estrelas</option>
+</select>
             </div>
             
             <div class="filter-group">
                 <i class="bi bi-geo-alt"></i>
-                <select id="countryFilter" onchange="filterSuppliers()">
-                    <option value="">Todos os Países</option>
-                </select>
+              <label for="countryFilter" class="form-label">País</label>
+
+<select id="countryFilter" onchange="filterSuppliers()">
+    <option value="">Todos os Países</option>
+</select>
             </div>
         </div>
 
@@ -203,7 +213,7 @@
                         <i class="bi bi-truck"></i>
                         <span id="modalTitleText">Novo Fornecedor</span>
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
                     <form id="supplierForm">
@@ -304,20 +314,22 @@
                             
                             <div class="col-md-4">
                                 <label class="form-label">País</label>
-                                <select class="form-select" id="country">
-                                    <option value="">Selecione o país</option>
-                                    <option value="Portugal" selected>Portugal</option>
-                                    <option value="Espanha">Espanha</option>
-                                    <option value="França">França</option>
-                                    <option value="Alemanha">Alemanha</option>
-                                    <option value="Itália">Itália</option>
-                                    <option value="Reino Unido">Reino Unido</option>
-                                    <option value="Estados Unidos">Estados Unidos</option>
-                                    <option value="Brasil">Brasil</option>
-                                    <option value="China">China</option>
-                                    <option value="Japão">Japão</option>
-                                    <option value="Outro">Outro</option>
-                                </select>
+                              <label for="country" class="form-label">País</label>
+
+<select class="form-select" id="country">
+    <option value="">Selecione o país</option>
+    <option value="Portugal" selected>Portugal</option>
+    <option value="Espanha">Espanha</option>
+    <option value="França">França</option>
+    <option value="Alemanha">Alemanha</option>
+    <option value="Itália">Itália</option>
+    <option value="Reino Unido">Reino Unido</option>
+    <option value="Estados Unidos">Estados Unidos</option>
+    <option value="Brasil">Brasil</option>
+    <option value="China">China</option>
+    <option value="Japão">Japão</option>
+    <option value="Outro">Outro</option>
+</select>
                             </div>
                         </div>
 
@@ -326,46 +338,62 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <label class="form-label">Classificação</label>
-                                <select class="form-select" id="rating">
-                                    <option value="5">5 Estrelas - Excelente</option>
-                                    <option value="4">4 Estrelas - Bom</option>
-                                    <option value="3">3 Estrelas - Regular</option>
-                                    <option value="2">2 Estrelas - Ruim</option>
-                                    <option value="1">1 Estrela - Péssimo</option>
-                                </select>
-                            </div>
+                           <label for="rating" class="form-label">Classificação</label>
+
+<select class="form-select" id="rating">
+    <option value="5">5 Estrelas - Excelente</option>
+    <option value="4">4 Estrelas - Bom</option>
+    <option value="3">3 Estrelas - Regular</option>
+    <option value="2">2 Estrelas - Ruim</option>
+    <option value="1">1 Estrela - Péssimo</option>
+</select>
                             
                             <div class="col-md-4">
                                 <label class="form-label">Prazo de Entrega (dias)</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="deliveryTime" value="7" min="1">
+                                 <label for="deliveryTime" class="form-label">Tempo de entrega (dias)</label>
+
+<input type="number"
+       class="form-control"
+       id="deliveryTime"
+       value="7"
+       min="1">
                                     <span class="input-group-text">dias</span>
                                 </div>
                             </div>
                             
                             <div class="col-md-4">
                                 <label class="form-label">Condições de Pagamento</label>
-                                <select class="form-select" id="paymentTerms">
-                                    <option value="30">30 dias</option>
-                                    <option value="60">60 dias</option>
-                                    <option value="90">90 dias</option>
-                                    <option value="advance">Pagamento antecipado</option>
-                                    <option value="delivery">Pagamento na entrega</option>
-                                </select>
+                               <label for="paymentTerms" class="form-label">Condições de Pagamento</label>
+
+<select class="form-select" id="paymentTerms">
+    <option value="30">30 dias</option>
+    <option value="60">60 dias</option>
+    <option value="90">90 dias</option>
+    <option value="advance">Pagamento antecipado</option>
+    <option value="delivery">Pagamento na entrega</option>
+</select>
                             </div>
                             
                             <div class="col-md-6">
                                 <label class="form-label">Categoria de Produtos</label>
-                                <select class="form-select" id="productCategory" multiple size="3">
-                                    <option value="Eletrônicos">Eletrônicos</option>
-                                    <option value="Periféricos">Periféricos</option>
-                                    <option value="Smartphones">Smartphones</option>
-                                    <option value="Acessórios">Acessórios</option>
-                                    <option value="Informática">Informática</option>
-                                    <option value="Áudio">Áudio</option>
-                                    <option value="Vídeo">Vídeo</option>
-                                    <option value="Games">Games</option>
-                                </select>
+                              <label for="productCategory" class="form-label">
+    Categorias do Produto
+</label>
+
+<select class="form-select"
+        id="productCategory"
+        multiple
+        size="3">
+    <option value="Eletrônicos">Eletrônicos</option>
+    <option value="Periféricos">Periféricos</option>
+    <option value="Smartphones">Smartphones</option>
+    <option value="Acessórios">Acessórios</option>
+    <option value="Informática">Informática</option>
+    <option value="Áudio">Áudio</option>
+    <option value="Vídeo">Vídeo</option>
+    <option value="Games">Games</option>
+</select>
                                 <small class="text-muted">Segure Ctrl para selecionar múltiplas</small>
                             </div>
                             
@@ -409,7 +437,11 @@
                         <i class="bi bi-truck"></i>
                         Detalhes do Fornecedor
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button"
+        class="btn-close btn-close-white"
+        data-bs-dismiss="modal"
+        aria-label="Fechar">
+</button>
                 </div>
                 <div class="modal-body" id="supplierDetailContent">
                     <!-- Conteúdo carregado via JavaScript -->

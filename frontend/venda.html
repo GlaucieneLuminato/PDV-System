@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StockMaster - Gestão de Vendas</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -1269,123 +1269,50 @@
             </div>
         </div>
 
-        <!-- Filtros de Histórico -->
-        <div class="filters-section">
-            <div class="filter-group">
-                <i class="bi bi-calendar"></i>
-                <div class="date-range">
-                   <input type="date" id="startDate">
-                    <input type="date" id="endDate">
-            </div>
-            
-            <div class="filter-group">
-                <i class="bi bi-funnel"></i>
-                <select id="statusFilter">
-                    <option value="">Todos os Status</option>
-                    <option value="completed">Concluídas</option>
-                    <option value="pending">Pendentes</option>
-                    <option value="cancelled">Canceladas</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <i class="bi bi-sort-alpha-down"></i>
-                <select id="sortFilter">
-                    <option value="date-desc">Mais Recentes</option>
-                    <option value="date-asc">Mais Antigas</option>
-                    <option value="value-desc">Maior Valor</option>
-                    <option value="value-asc">Menor Valor</option>
-                </select>
-            </div>
-            
-            <button class="btn btn-primary" onclick="applyFilters()">
-                <i class="bi bi-funnel me-1"></i>Aplicar Filtros
-            </button>
-        </div>
+  <div class="filters-section">
 
-        <!-- Tabela de Vendas -->
-        <div class="sales-table-container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nº Venda</th>
-                        <th>Data/Hora</th>
-                        <th>Cliente</th>
-                        <th>NIF</th>
-                        <th>Itens</th>
-                        <th>Total</th>
-                        <th>Pagamento</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="salesTableBody">
-                    <!-- Vendas carregadas via JavaScript -->
-                </tbody>
-            </table>
-        </div>
+    <div class="filter-group">
+        <i class="bi bi-calendar" aria-hidden="true"></i>
 
-        <!-- Paginação -->
-        <div class="pagination" id="pagination"></div>
-    </div>
+        <div class="date-range">
+            <label for="startDate" class="visually-hidden">Data inicial</label>
+            <input type="date" id="startDate">
 
-    <!-- Modal de Detalhes da Venda -->
-    <div class="modal fade" id="saleModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-receipt"></i>
-                        Detalhes da Venda
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="saleDetailContent">
-                    <!-- Conteúdo carregado via JavaScript -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" onclick="printReceipt()">
-                        <i class="bi bi-printer me-1"></i>Imprimir
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
+            <label for="endDate" class="visually-hidden">Data final</label>
+            <input type="date" id="endDate">
         </div>
     </div>
 
-    <!-- Modal de Pagamento (Dinheiro) -->
-    <div class="modal fade" id="cashPaymentModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-cash"></i>
-                        Pagamento em Dinheiro
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-4">
-                        <h3 id="cashTotal">€0,00</h3>
-                        <p class="text-muted">Total a pagar</p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Valor Recebido</label>
-                        <div class="input-group">
-                            <span class="input-group-text">€</span>
-                            <input type="number" class="form-control" id="amountReceived" step="0.01" min="0" onkeyup="calculateChange()">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Troco</label>
-                        <div class="input-group">
-                            <span class="input-group-text">€</span>
-                            <input type="text" class="form-control" id="change" readonly value="0,00">
-                        </div>
-                    </div>
-                </div>
+    <div class="filter-group">
+        <i class="bi bi-funnel" aria-hidden="true"></i>
+
+        <label for="statusFilter" class="visually-hidden">Status</label>
+        <select id="statusFilter">
+            <option value="">Todos os Status</option>
+            <option value="completed">Concluídas</option>
+            <option value="pending">Pendentes</option>
+            <option value="cancelled">Canceladas</option>
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <i class="bi bi-sort-alpha-down" aria-hidden="true"></i>
+
+        <label for="sortFilter" class="visually-hidden">Ordenação</label>
+        <select id="sortFilter">
+            <option value="date-desc">Mais Recentes</option>
+            <option value="date-asc">Mais Antigas</option>
+            <option value="value-desc">Maior Valor</option>
+            <option value="value-asc">Menor Valor</option>
+        </select>
+    </div>
+
+    <button class="btn btn-primary" onclick="applyFilters()">
+        <i class="bi bi-funnel me-1" aria-hidden="true"></i>
+        Aplicar Filtros
+    </button>
+
+</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-success" onclick="confirmCashPayment()">
