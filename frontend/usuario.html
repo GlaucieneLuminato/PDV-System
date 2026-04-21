@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StockMaster - Gestão de Usuários</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -24,9 +24,9 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <button class="close-sidebar" id="closeSidebar">
-            <i class="bi bi-x"></i>
-        </button>
+      <button class="close-sidebar" id="closeSidebar" aria-label="Fechar menu lateral">
+    <i class="bi bi-x"></i>
+</button>
         
         <div class="sidebar-header">
             <div class="logo">
@@ -52,7 +52,7 @@
     <div class="main-content" id="mainContent">
         <!-- Top Navigation -->
         <div class="top-nav">
-            <button class="menu-toggle" id="menuToggle">
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu lateral">
                 <i class="bi bi-list"></i>
             </button>
             
@@ -83,7 +83,10 @@
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h4><i class="bi bi-people me-2" style="color: #4f9fff;"></i>Gestão de Usuários</h4>
+              <h4>
+    <i class="bi bi-people me-2 section-icon" aria-hidden="true"></i>
+    Gestão de Usuários
+</h4>
                 <p class="text-muted mb-0">Gerencie usuários e permissões do sistema</p>
             </div>
             <button class="btn btn-primary" onclick="openUserModal()">
@@ -100,7 +103,7 @@
             
             <div class="filter-group">
                 <i class="bi bi-funnel"></i>
-                <select id="filterRole" onchange="filterUsers()">
+                <select id="filterRole" onchange="filterUsers()" aria-label="Filtrar por função">
                     <option value="">Todos os níveis</option>
                     <option value="admin">Administrador</option>
                     <option value="manager">Gerente</option>
@@ -111,7 +114,7 @@
             
             <div class="filter-group">
                 <i class="bi bi-toggle-on"></i>
-                <select id="filterStatus" onchange="filterUsers()">
+                <select id="filterStatus" onchange="filterUsers()" aria-label="Filtrar por status">
                     <option value="">Todos os status</option>
                     <option value="active">Ativos</option>
                     <option value="inactive">Inativos</option>
@@ -148,7 +151,7 @@
                         <i class="bi bi-person-plus"></i>
                         <span id="modalTitleText">Novo Usuário</span>
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
                     <form id="userForm">
@@ -161,189 +164,197 @@
                             
                             <div class="col-md-6">
                                 <label class="form-label">Nome Completo *</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                    <input type="text" class="form-control" id="userName" required>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">CPF</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                                    <input type="text" class="form-control" id="userCpf">
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">E-mail *</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control" id="userEmail" required>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Telefone</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                    <input type="tel" class="form-control" id="userPhone">
-                                </div>
-                            </div>
-                            
-                            <!-- Nível de Acesso -->
-                            <div class="col-12 mt-3">
-                                <h6 class="fw-bold">Nível de Acesso</h6>
-                                <hr class="my-2">
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Nível *</label>
-                                <select class="form-select" id="userRole" onchange="togglePermissions()">
-                                    <option value="admin">Administrador</option>
-                                    <option value="manager" selected>Gerente</option>
-                                    <option value="operator">Operador</option>
-                                    <option value="viewer">Visualizador</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Status</label>
-                                <select class="form-select" id="userStatus">
-                                    <option value="active" selected>Ativo</option>
-                                    <option value="inactive">Inativo</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Permissões Específicas -->
-                            <div class="col-12">
-                                <div class="permissions-section">
-                                    <div class="permissions-title">
-                                        <i class="bi bi-shield-check me-2"></i>
-                                        Permissões Específicas
-                                    </div>
-                                    
-                                    <div class="permission-item">
-                                        <div class="permission-info">
-                                            <div class="permission-name">Produtos</div>
-                                            <div class="permission-desc">Gerenciar catálogo de produtos</div>
-                                        </div>
-                                        <select class="form-select" style="width: 120px;" id="permProducts">
-                                            <option value="none">Nenhum</option>
-                                            <option value="view">Visualizar</option>
-                                            <option value="edit" selected>Editar</option>
-                                            <option value="full">Total</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="permission-item">
-                                        <div class="permission-info">
-                                            <div class="permission-name">Vendas</div>
-                                            <div class="permission-desc">Gerenciar vendas e transações</div>
-                                        </div>
-                                        <select class="form-select" style="width: 120px;" id="permSales">
-                                            <option value="none">Nenhum</option>
-                                            <option value="view">Visualizar</option>
-                                            <option value="edit" selected>Editar</option>
-                                            <option value="full">Total</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="permission-item">
-                                        <div class="permission-info">
-                                            <div class="permission-name">Relatórios</div>
-                                            <div class="permission-desc">Acessar relatórios e análises</div>
-                                        </div>
-                                        <select class="form-select" style="width: 120px;" id="permReports">
-                                            <option value="none">Nenhum</option>
-                                            <option value="view" selected>Visualizar</option>
-                                            <option value="edit">Editar</option>
-                                            <option value="full">Total</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="permission-item">
-                                        <div class="permission-info">
-                                            <div class="permission-name">Usuários</div>
-                                            <div class="permission-desc">Gerenciar usuários do sistema</div>
-                                        </div>
-                                        <select class="form-select" style="width: 120px;" id="permUsers">
-                                            <option value="none" selected>Nenhum</option>
-                                            <option value="view">Visualizar</option>
-                                            <option value="edit">Editar</option>
-                                            <option value="full">Total</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="permission-item">
-                                        <div class="permission-info">
-                                            <div class="permission-name">Configurações</div>
-                                            <div class="permission-desc">Alterar configurações do sistema</div>
-                                        </div>
-                                        <select class="form-select" style="width: 120px;" id="permSettings">
-                                            <option value="none" selected>Nenhum</option>
-                                            <option value="view">Visualizar</option>
-                                            <option value="edit">Editar</option>
-                                            <option value="full">Total</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Senha (apenas para novos usuários) -->
-                            <div class="col-12 mt-3" id="passwordSection">
-                                <h6 class="fw-bold">Senha de Acesso</h6>
-                                <hr class="my-2">
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Senha *</label>
-                                <input type="password" class="form-control" id="userPassword" onkeyup="checkPasswordStrength()">
-                                <div class="password-strength">
-                                    <div class="password-strength-bar" id="passwordStrength"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Confirmar Senha *</label>
-                                <input type="password" class="form-control" id="confirmPassword">
-                            </div>
-                            
-                            <!-- Observações -->
-                            <div class="col-12 mt-3">
-                                <label class="form-label">Observações</label>
-                                <textarea class="form-control" id="userNotes" rows="2"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveUser()" id="saveUserBtn">
-                        Salvar Usuário
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                              <label for="userName" class="form-label">Nome</label>
 
-    <!-- Modal de Permissões -->
-    <div class="modal fade" id="permissionsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-shield-lock"></i>
-                        Permissões do Usuário
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-3">
-                        <div class="user-avatar-table" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto;" id="permUserAvatar">JD</div>
-                        <h6 class="mt-2" id="permUserName">João Silva</h6>
-                        <span class="role-badge" id="permUserRole">Administrador</span>
-                    </div>
+<div class="input-group">
+    <span class="input-group-text">
+        <i class="bi bi-person" aria-hidden="true"></i>
+    </span>
+
+    <input type="text"
+           class="form-control"
+           id="userName"
+           required>
+</div>
+                            </div>
+                            
+                         <div class="col-md-6">
+    <label class="form-label" for="userCpf">CPF</label>
+
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="bi bi-card-text" aria-hidden="true"></i>
+        </span>
+
+        <input type="text" class="form-control" id="userCpf" name="cpf">
+    </div>
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="userEmail">E-mail *</label>
+
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="bi bi-envelope" aria-hidden="true"></i>
+        </span>
+
+        <input type="email" class="form-control" id="userEmail" name="email" required>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="userPhone">Telefone</label>
+
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="bi bi-telephone" aria-hidden="true"></i>
+        </span>
+
+        <input type="tel" class="form-control" id="userPhone" name="phone">
+    </div>
+</div>
+
+<!-- NÍVEL DE ACESSO -->
+<div class="col-12 mt-3">
+    <h6 class="fw-bold">Nível de Acesso</h6>
+    <hr class="my-2">
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="userRole">Nível *</label>
+
+    <select class="form-select" id="userRole" name="role" onchange="togglePermissions()">
+        <option value="admin">Administrador</option>
+        <option value="manager" selected>Gerente</option>
+        <option value="operator">Operador</option>
+        <option value="viewer">Visualizador</option>
+    </select>
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="userStatus">Status</label>
+
+    <select class="form-select" id="userStatus" name="status">
+        <option value="active" selected>Ativo</option>
+        <option value="inactive">Inativo</option>
+    </select>
+</div>
+
+<!-- PERMISSÕES -->
+<div class="col-12">
+    <div class="permissions-section">
+
+        <div class="permissions-title">
+            <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
+            Permissões Específicas
+        </div>
+
+        <div class="permission-item">
+            <div class="permission-info">
+                <div class="permission-name">Produtos</div>
+                <div class="permission-desc">Gerenciar catálogo de produtos</div>
+            </div>
+
+         <label for="permProducts" class="form-label">Permissão de Produtos</label>
+
+<select class="form-select permission-select" id="permProducts">
+    <option value="none">Nenhum</option>
+    <option value="view">Visualizar</option>
+    <option value="edit" selected>Editar</option>
+    <option value="full">Total</option>
+</select>
+        </div>
+
+        <div class="permission-item">
+            <div class="permission-info">
+                <div class="permission-name">Vendas</div>
+                <div class="permission-desc">Gerenciar vendas e transações</div>
+            </div>
+
+           <label for="permSales" class="form-label">Permissão de Vendas</label>
+
+<select class="form-select permission-select" id="permSales">
+    <option value="none">Nenhum</option>
+    <option value="view">Visualizar</option>
+    <option value="edit" selected>Editar</option>
+    <option value="full">Total</option>
+</select>
+        </div>
+
+        <div class="permission-item">
+            <div class="permission-info">
+                <div class="permission-name">Relatórios</div>
+                <div class="permission-desc">Acessar relatórios e análises</div>
+            </div>
+
+        <label for="permReports" class="form-label">Permissão de Relatórios</label>
+
+<select class="form-select permission-select" id="permReports">
+    <option value="none">Nenhum</option>
+    <option value="view" selected>Visualizar</option>
+    <option value="edit">Editar</option>
+    <option value="full">Total</option>
+</select>
+        </div>
+
+    <div class="permission-item">
+    <label for="permReports" class="form-label">Permissão de Relatórios</label>
+
+    <select class="form-select permission-select" id="permReports">
+        <option value="none">Nenhum</option>
+        <option value="view" selected>Visualizar</option>
+        <option value="edit">Editar</option>
+        <option value="full">Total</option>
+    </select>
+</div>
+    <div class="permission-item">
+    <label for="permSettings" class="form-label">Permissão de Configurações</label>
+
+    <select class="form-select permission-select" id="permSettings">
+        <option value="none" selected>Nenhum</option>
+        <option value="view">Visualizar</option>
+        <option value="edit">Editar</option>
+        <option value="full">Total</option>
+    </select>
+</div>
+
+    </div>
+</div>
+
+<!-- SENHA -->
+<div class="col-12 mt-3" id="passwordSection">
+    <h6 class="fw-bold">Senha de Acesso</h6>
+    <hr class="my-2">
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="userPassword">Senha *</label>
+
+    <input type="password"
+           class="form-control"
+           id="userPassword"
+           onkeyup="checkPasswordStrength()"
+           name="password">
+</div>
+
+<div class="col-md-6">
+    <label class="form-label" for="confirmPassword">Confirmar Senha *</label>
+
+    <input type="password"
+           class="form-control"
+           id="confirmPassword"
+           name="confirmPassword">
+</div>
+
+<!-- OBSERVAÇÕES -->
+<div class="col-12 mt-3">
+    <label class="form-label" for="userNotes">Observações</label>
+
+    <textarea class="form-control"
+              id="userNotes"
+              rows="2"
+              name="notes"></textarea>
+</div>
                     
                     <div class="permissions-section mt-3">
                         <div class="permission-item">
