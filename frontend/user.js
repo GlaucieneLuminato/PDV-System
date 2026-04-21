@@ -1,18 +1,101 @@
+const API_BASE = "https://pdv-system-c359.onrender.com";
+
+const API_USERS = API_BASE + "/api/users/";
+const API_ME = API_BASE + "/api/me/";
+const API_LOGIN = API_BASE + "/api/token/";
+const API_REFRESH = API_BASE + "/api/token/refresh/";
+
+// ===================== ESTADO =====================
 let users = [];
 
-async function carregarUsuarios(){
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("access")}`
-        }
-    });
-
-    users = await resposta.json();
-    renderUsers(users);
+// ===================== TOKEN =====================
+function getToken() {
+    return localStorage.getItem("access");
 }
 
+// ===================== LOGIN =====================
+async function login(event) {
+    event.preventDefault();
 
-async function saveUser(){
+    const username = document.getElementById("userName").value;
+    const password = document.getElementById("userPassword").value;
+
+    try {
+        const response = await fetch(API_LOGIN, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Erro login:", data);
+            alert("Usuário ou senha inválidos!");
+            return;
+        }
+
+        // salva tokens
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
+
+        // busca perfil
+        const userResponse = await fetch(API_ME, {
+            headers: {
+                "Authorization": `Bearer ${data.access}`
+            }
+        });
+
+        const userData = await userResponse.json();
+        localStorage.setItem("tipo", userData.tipo);
+
+        window.location.href = "dashboard.html";
+
+    } catch (error) {
+        console.error("Erro login:", error);
+        alert("Erro ao conectar com servidor");
+    }
+}
+
+// ===================== PROTEÇÃO DE ROTAS =====================
+function verificarLogin() {
+    const token = getToken();
+
+    if (!token) {
+        window.location.href = "login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", verificarLogin);
+
+// ===================== USUÁRIOS =====================
+async function carregarUsuarios() {
+    try {
+        const resposta = await fetch(API_USERS, {
+            headers: {
+                "Authorization": `Bearer ${getToken()}`
+            }
+        });
+
+        if (!resposta.ok) {
+            console.error("Erro ao carregar usuários");
+            return;
+        }
+
+        users = await resposta.json();
+        renderUsers(users);
+
+    } catch (error) {
+        console.error("Erro:", error);
+    }
+}
+
+async function saveUser() {
     const user = {
         username: document.getElementById("userName").value,
         email: document.getElementById("userEmail").value,
@@ -20,41 +103,42 @@ async function saveUser(){
         role: document.getElementById("userRole").value,
     };
 
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("access")}`
-        },
-        body: JSON.stringify(user)
-    });
+    try {
+        const resposta = await fetch(API_USERS, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
+            body: JSON.stringify(user)
+        });
 
-    if(resposta.ok){
-        mostrarToast("Usuário criado com sucesso");
-        carregarUsuarios();
-    } else {
-        mostrarToast("Erro ao criar usuário", "error");
+        if (resposta.ok) {
+            mostrarToast("Usuário criado com sucesso");
+            carregarUsuarios();
+        } else {
+            mostrarToast("Erro ao criar usuário", "error");
+        }
+
+    } catch (error) {
+        console.error("Erro:", error);
     }
 }
 
-function renderUsers(lista){
+// ===================== RENDER USUÁRIOS =====================
+function renderUsers(lista) {
     const tbody = document.getElementById("usersTableBody");
 
-    if(!tbody){
-        console.warn("Tabela de usuários não encontrada!");
-        return;
-    }
+    if (!tbody) return;
 
     tbody.innerHTML = "";
 
     lista.forEach(user => {
 
-       
         const statusBadge = user.status === "active"
             ? `<span class="badge bg-success">Ativo</span>`
             : `<span class="badge bg-secondary">Inativo</span>`;
 
-       
         const roleName = {
             admin: "Administrador",
             manager: "Gerente",
@@ -64,7 +148,7 @@ function renderUsers(lista){
 
         const linha = `
         <tr>
-            <td>${user.name || "-"}</td>
+            <td>${user.username || "-"}</td>
             <td>${user.email || "-"}</td>
             <td>${roleName[user.role] || user.role}</td>
             <td>${statusBadge}</td>
@@ -83,68 +167,23 @@ function renderUsers(lista){
     });
 }
 
-
-function verificarLogin(){
-    const token = localStorage.getItem("access");
-
-    if(!token){
-        window.location.href = "login.html";
-    }
+// ===================== TOAST =====================
+function mostrarToast(mensagem, tipo = "success") {
+    Toastify({
+        text: mensagem,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        background: tipo === "success" ? "#28a745" : "#dc3545",
+    }).showToast();
 }
 
-document.addEventListener("DOMContentLoaded", verificarLogin);
+// ===================== INIT =====================
+document.addEventListener("DOMContentLoaded", () => {
+    verificarLogin();
+    carregarUsuarios();
+});
 
-async function login(event) {
-    event.preventDefault();
-
-    const username = document.getElementById("userName").value;
-    const password = document.getElementById("userPassword").value;
-
-    try {
-        const response = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("Erro:", data);
-            alert("Usuário ou senha inválidos!");
-            return;
-        }
-
-        // 🔐 salva tokens
-        localStorage.setItem("access", data.access);
-        localStorage.setItem("refresh", data.refresh);
-
-        // 👤 pega dados do usuário
-        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
-            headers: {
-                "Authorization": `Bearer ${data.access}`
-            }
-        });
-
-        const userData = await userResponse.json();
-
-        console.log("USER DATA:", userData);
-
-        localStorage.setItem("tipo", userData.tipo);
-
-        // 🚀 redireciona
-        window.location.href = "dashboard.html";
-
-    } catch (error) {
-        console.error("Erro geral:", error);
-        alert("Erro ao conectar com servidor");
-    }
-}
-
-
-
+// expõe funções globais
+window.login = login;
+window.saveUser = saveUser;

@@ -1,8 +1,14 @@
 const API_BASE = "https://pdv-system-c359.onrender.com";
+
 const API_PRODUTOS = API_BASE + "/api/produtos/";
+
+
 const API_VENDAS = API_BASE + "/api/vendas/";
 const API_USERS = API_BASE + "/api/users/";
 
+// 👇 ESSAS DUAS LINHAS FALTAM
+const API_LOGIN = API_BASE + "/api/token/";
+const API_REFRESH = API_BASE + "/api/token/refresh/";
 function getToken(){
     return localStorage.getItem("access");
 }
