@@ -869,7 +869,7 @@ async function verificarAdmin() {
         return;
     }
 
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/me/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
         headers: {
             "Authorization": `Bearer ${token}`
         }

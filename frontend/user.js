@@ -1,7 +1,7 @@
 let users = [];
 
 async function carregarUsuarios(){
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("access")}`
         }
@@ -20,7 +20,7 @@ async function saveUser(){
         role: document.getElementById("userRole").value,
     };
 
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/users/", {
+    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/users/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -101,7 +101,7 @@ async function login(event) {
     const password = document.getElementById("userPassword").value;
 
     try {
-        const response = await fetch("https://pdv-system-c359.onrender.com/login/", {
+        const response = await fetch("https://pdv-system-c359.onrender.com/api/login/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -125,7 +125,7 @@ async function login(event) {
         localStorage.setItem("refresh", data.refresh);
 
         // 👤 pega dados do usuário
-        const userResponse = await fetch("https://pdv-system-c359.onrender.com/me/", {
+        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
