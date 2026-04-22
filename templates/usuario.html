@@ -17,6 +17,7 @@
     <!-- Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="css/usuarios.css">
+    {% load static %}
 </head>
 <body>
     <!-- Sidebar Overlay -->
@@ -891,6 +892,6 @@ async function verificarAdmin() {
 
 document.addEventListener("DOMContentLoaded", verificarAdmin);
 </script>
-    <script src="./user.js"></script>
+   <script src="{% static 'js/user.js' %}"></script>
 </body>
 </html>
