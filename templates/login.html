@@ -1,57 +1,62 @@
-<!DOCTYPE html>
-<html lang="pt-pt">
+<!DOCTYPE html><html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <title>Login | Isaac Masakidi </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="file/WhatsApp Image 2026-02-25 at 15.38.41.jpeg" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Django static -->
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Corrigido: caminho do CSS -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 </head>
-<body>
-
-    <div class="container">
-        <div class="left-panel">
-            <!-- Está aqui o codigo Glauce -->
-            <h1> </h1>
-            <p></p>
-        </div>
-
-        <div class="right-panel">
-            <div class="login-box">
-                 
-                <h2>Acessar o sistema</h2>
-
-          <form onsubmit="fazerLogin(event)">
-    <div class="field">
-        <label>Usuário</label>
-        <div class="input-wrapper">
-            <i class="fas fa-user"></i>
-            <input type="text" id="usuario" name="usuario" placeholder="Usuário" required>
-        </div>
+<body><div class="container">
+    <div class="left-panel">
+        <h1></h1>
+        <p></p>
     </div>
 
-    <div class="field">
-        <label>Senha</label>
-        <div class="input-wrapper">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="senha" name="senha" name="senha" autocomplete="current-password" placeholder="Senha" required>
-        </div>
-    </div>
+    <div class="right-panel">
+        <div class="login-box">
+             
+            <h2>Acessar o sistema</h2>
 
-    <button type="submit" class="login-btn">
-        <i class="fas fa-right-to-bracket"></i> Entrar
-    </button>
-</form>
+            <form onsubmit="fazerLogin(event)">
+                
+                <div class="field">
+                    <label>Usuário</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <!-- autocomplete corrigido -->
+                        <input type="text" id="usuario" name="usuario" autocomplete="username" placeholder="Usuário" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Senha</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <!-- removido name duplicado -->
+                        <input type="password" id="senha" name="senha" autocomplete="current-password" placeholder="Senha" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-right-to-bracket"></i> Entrar
+                </button>
+
+            </form>
 
 <script>
 async function fazerLogin(event){
     event.preventDefault();
 
-    const usuario = document.getElementById("usuario").value;
-    const senha = document.getElementById("senha").value;
+    const usuario = document.getElementById("usuario").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    console.log("LOGIN:", usuario, senha);
 
     try{
         const resposta = await fetch("https://pdv-system-c359.onrender.com/api/token/", {
@@ -65,44 +70,47 @@ async function fazerLogin(event){
             })
         });
 
-        const data = await resposta.json();
-
         if(!resposta.ok){
+            console.error("Erro login:", resposta.status);
             alert("Usuário ou senha inválidos");
             return;
         }
 
-       
+        const data = await resposta.json();
+
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
 
         console.log("TOKEN:", data.access);
 
-      
+        // 🔥 buscar usuário logado
         const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/users/me/", {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
         });
+
+        if(!userResponse.ok){
+            console.error("Erro ao buscar usuário:", userResponse.status);
+            return;
+        }
+
         const userData = await userResponse.json();
         localStorage.setItem("tipo", userData.tipo);
 
         console.log("USER:", userData);
 
-       
+        // 🔥 redirecionamento corrigido para Django
         if(userData.tipo === "admin"){
-            window.location.href = "./admin.html";
+            window.location.href = "/admin/";
         } else {
-            window.location.href = "./dashboard.html";
+            window.location.href = "/dashboard/";
         }
 
     }catch(error){
         console.error("Erro no login:", error);
+        alert("Erro ao conectar com servidor");
     }
 }
- 
-</script>
-
-
-</body>
+</script></body>
 </html>

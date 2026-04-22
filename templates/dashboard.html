@@ -1011,29 +1011,45 @@ Produto em promoção até fim do mês</textarea
       </div>
     </div>
 
-    <!-- Scripts -->
-
-   <script>
-const API_URL = "https://pdv-system-c359.onrender.com/api";
+<!-- Scripts --><script>
+const API_BASE = "https://pdv-system-c359.onrender.com";
+const API_PRODUTOS = API_BASE + "/api/produtos/";
 
 // 🔐 PEGAR TOKEN
 function getToken() {
   return localStorage.getItem("access");
 }
 
+// 🔐 VERIFICAR LOGIN
+function verificarLogin() {
+  const token = getToken();
+
+  if (!token) {
+    alert("Você precisa estar logado");
+    window.location.href = "/login/";
+  }
+}
+
 // 🔥 LISTAR PRODUTOS DO BACKEND
 async function carregarProdutos() {
   try {
-    const response = await fetch(`${API_URL}/produtos/`, {
+    const response = await fetch(API_PRODUTOS, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${getToken()}`
       }
     });
 
+    if (!response.ok) {
+      console.error("Erro ao carregar produtos:", response.status);
+      return;
+    }
+
     const data = await response.json();
 
     const tbody = document.querySelector("tbody");
+    if (!tbody) return;
+
     tbody.innerHTML = "";
 
     data.forEach((produto) => {
@@ -1062,12 +1078,17 @@ async function excluirProduto(id) {
   if (!confirm("Deseja excluir?")) return;
 
   try {
-    await fetch(`${API_URL}/produtos/${id}/`, {
+    const response = await fetch(`${API_PRODUTOS}${id}/`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${getToken()}`
       }
     });
+
+    if (!response.ok) {
+      console.error("Erro ao excluir:", response.status);
+      return;
+    }
 
     carregarProdutos();
 
@@ -1084,15 +1105,15 @@ document.getElementById("formCadastrarProduto")
   const inputs = this.querySelectorAll("input");
 
   const produto = {
-    nome: inputs[0].value,
-    sku: inputs[1].value,
+    nome: inputs[0].value.trim(),
+    sku: inputs[1].value.trim(),
     categoria: "Eletrônicos",
     preco: inputs[3].value,
     estoque: inputs[4].value
   };
 
   try {
-    await fetch(`${API_URL}/produtos/criar/`, {
+    const response = await fetch(`${API_PRODUTOS}criar/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1100,6 +1121,11 @@ document.getElementById("formCadastrarProduto")
       },
       body: JSON.stringify(produto)
     });
+
+    if (!response.ok) {
+      console.error("Erro ao criar produto:", response.status);
+      return;
+    }
 
     alert("Produto criado!");
     carregarProdutos();
@@ -1109,24 +1135,11 @@ document.getElementById("formCadastrarProduto")
   }
 });
 
-// 🔐 VERIFICAR LOGIN
-function verificarLogin() {
-  const token = getToken();
-
-  if (!token) {
-    alert("Você precisa estar logado");
-    window.location.href = "login.html";
-  }
-}
-
 // 🚀 INICIAR
 document.addEventListener("DOMContentLoaded", () => {
   verificarLogin();
   carregarProdutos();
 });
-</script>
-
 <script src="{% static 'js/api.js' %}"></script>
 <script src="{% static 'js/user.js' %}"></script>
-</body>
-</html>
+</script><!-- Scripts principais -->

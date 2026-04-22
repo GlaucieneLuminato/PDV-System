@@ -16,7 +16,7 @@
     
     <!-- Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-     <link rel="stylesheet" href="css/perfil.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
      {% load static %}
     
 </head>
@@ -369,10 +369,7 @@
 
 <div id="toastContainer" class="toast-container"></div>
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="{% static 'js/api.js' %}"></script>
-
+ 
         <script>
         const tipo = localStorage.getItem("tipo");
         if(tipo !== "admin"){
@@ -383,9 +380,7 @@
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        const API_BASE_URL = 'https://api.stockmaster.com/v1';
-        const USER_ID = 'current';
-
+     const API_BASE_URL = 'https://pdv-system-c359.onrender.com';
         // ===== ESTADO GLOBAL =====
         let currentUser = {
             id: 1,
@@ -877,42 +872,98 @@
     </script>
 
 <script>
+<!-- Scripts principais -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+{% load static %}
+<script src="{% static 'js/api.js' %}"></script>
+
+<script>
+// 🔐 VERIFICA LOGIN
 function verificarLogin(){
     const token = localStorage.getItem("access");
 
     if(!token){
+        alert("Você precisa estar logado");
         window.location.href = "login.html";
     }
 }
 
-document.addEventListener("DOMContentLoaded", verificarLogin);
-</script>
+// 🔐 VERIFICA PERMISSÃO
+function verificarAdmin(){
+    const tipo = localStorage.getItem("tipo");
 
-<script>
-async function verificarAdmin() {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    const resposta = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    const user = await resposta.json();
-
-    if (user.tipo !== "admin") {
-        alert("Apenas administradores podem acessar essa área");
+    if(tipo !== "admin"){
+        alert("Acesso negado");
         window.location.href = "dashboard.html";
     }
 }
 
-document.addEventListener("DOMContentLoaded", verificarAdmin);
+// 🚀 INICIAR
+document.addEventListener("DOMContentLoaded", () => {
+    verificarLogin();
+    verificarAdmin();
+});
 </script>
 
+<script>
+// ===== CONFIGURAÇÃO CORRETA =====
+const API_BASE = "https://pdv-system-c359.onrender.com";
+
+// 🔐 TOKEN
+function getToken(){
+    return localStorage.getItem("access");
+}
+
+// ===== ALTERAR SENHA (CORRIGIDO) =====
+async function changePassword() {
+    const btn = document.getElementById('changePasswordBtn');
+    btn.disabled = true;
+
+    const currentPass = document.getElementById('currentPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    const confirmPass = document.getElementById('confirmPassword').value;
+
+    if (!currentPass || !newPass) {
+        alert("Preencha todos os campos");
+        btn.disabled = false;
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        alert("As senhas não coincidem");
+        btn.disabled = false;
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/users/change-password/`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({
+                current_password: currentPass,
+                new_password: newPass
+            })
+        });
+
+        if(!response.ok){
+            alert("Erro ao alterar senha");
+            return;
+        }
+
+        alert("Senha alterada com sucesso!");
+
+    } catch (error) {
+        console.error(error);
+        alert("Erro no servidor");
+    } finally {
+        btn.disabled = false;
+    }
+}
+</script>
 </body>
 </html>

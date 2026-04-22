@@ -17,8 +17,10 @@ function getToken() {
 async function login(event) {
     event.preventDefault();
 
-    const username = document.getElementById("userName").value;
-    const password = document.getElementById("userPassword").value;
+    const username = document.getElementById("usuario").value.trim();
+    const password = document.getElementById("senha").value.trim();
+
+    console.log("LOGIN:", username, password);
 
     try {
         const response = await fetch(API_LOGIN, {
@@ -40,28 +42,30 @@ async function login(event) {
             return;
         }
 
-        // salva tokens
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
 
-        // busca perfil
         const userResponse = await fetch(API_ME, {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
         });
 
+        if (!userResponse.ok) {
+            console.error("Erro ao buscar perfil:", userResponse.status);
+            return;
+        }
+
         const userData = await userResponse.json();
         localStorage.setItem("tipo", userData.tipo);
 
-        window.location.href = "dashboard.html";
+        window.location.href = "/dashboard/";
 
     } catch (error) {
         console.error("Erro login:", error);
         alert("Erro ao conectar com servidor");
     }
 }
-
 // ===================== PROTEÇÃO DE ROTAS =====================
 function verificarLogin() {
     const token = getToken();
