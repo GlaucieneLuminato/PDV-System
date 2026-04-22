@@ -79,7 +79,7 @@ async function fazerLogin(event){
         console.log("TOKEN:", data.access);
 
       
-        const userResponse = await fetch("https://pdv-system-c359.onrender.com/users/me/", {
+        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/users/me/", {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
