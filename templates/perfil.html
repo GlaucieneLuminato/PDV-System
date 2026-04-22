@@ -380,7 +380,7 @@
 
     <script>
         // ===== CONFIGURAÇÕES =====
-     const API_BASE_URL = 'https://pdv-system-c359.onrender.com';
+   
         // ===== ESTADO GLOBAL =====
         let currentUser = {
             id: 1,
@@ -881,6 +881,7 @@
 
 <script>
 // 🔐 VERIFICA LOGIN
+
 function verificarLogin(){
     const token = localStorage.getItem("access");
 
@@ -901,14 +902,15 @@ function verificarAdmin(){
 }
 
 // 🚀 INICIAR
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener ("DOMContentLoaded", () => {
     verificarLogin();
     verificarAdmin();
 });
 </script>
 
 <script>
-// ===== CONFIGURAÇÃO CORRETA =====
+//===== CONFIGURAÇÃO CORRETA =====
+
 const API_BASE = "https://pdv-system-c359.onrender.com";
 
 // 🔐 TOKEN

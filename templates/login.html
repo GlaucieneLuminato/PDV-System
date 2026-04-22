@@ -84,7 +84,7 @@ async function fazerLogin(event){
         console.log("TOKEN:", data.access);
 
         // 🔥 buscar usuário logado
-        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/users/me/", {
+        const userResponse = await fetch("https://pdv-system-c359.onrender.com/api/me/", {
             headers: {
                 "Authorization": `Bearer ${data.access}`
             }
