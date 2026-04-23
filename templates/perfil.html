@@ -876,41 +876,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-{% load static %}
-<script src="{% static 'js/api.js' %}"></script>
-
 <script>
-// 🔐 VERIFICA LOGIN
-
-function verificarLogin(){
-    const token = localStorage.getItem("access");
-
-    if(!token){
-        alert("Você precisa estar logado");
-        window.location.href = "login.html";
-    }
-}
-
-// 🔐 VERIFICA PERMISSÃO
-function verificarAdmin(){
-    const tipo = localStorage.getItem("tipo");
-
-    if(tipo !== "admin"){
-        alert("Acesso negado");
-        window.location.href = "dashboard.html";
-    }
-}
-
-// 🚀 INICIAR
-document.addEventListener ("DOMContentLoaded", () => {
-    verificarLogin();
-    verificarAdmin();
-});
-</script>
-
-<script>
-//===== CONFIGURAÇÃO CORRETA =====
-
 const API_BASE = "https://pdv-system-c359.onrender.com";
 
 // 🔐 TOKEN
@@ -918,7 +884,63 @@ function getToken(){
     return localStorage.getItem("access");
 }
 
-// ===== ALTERAR SENHA (CORRIGIDO) =====
+// 🔐 VERIFICA LOGIN
+function verificarLogin(){
+    const token = getToken();
+
+    if(!token){
+        alert("Você precisa estar logado");
+        window.location.href = "/login/";
+    }
+}
+
+// 🔐 VERIFICA ADMIN
+function verificarAdmin(){
+    const tipo = localStorage.getItem("tipo");
+
+    if(tipo !== "admin"){
+        alert("Acesso negado");
+        window.location.href = "/dashboard/";
+    }
+}
+
+// 🚀 INICIAR
+document.addEventListener("DOMContentLoaded", () => {
+    verificarLogin();
+    verificarAdmin();
+    carregarPerfil();
+});
+
+// ===============================
+// 👤 CARREGAR DADOS DO USUÁRIO
+// ===============================
+async function carregarPerfil(){
+    try{
+        const response = await fetch(`${API_BASE}/api/me/`, {
+            headers: {
+                "Authorization": `Bearer ${getToken()}`
+            }
+        });
+
+        if(!response.ok){
+            console.error("Erro ao buscar usuário:", response.status);
+            return;
+        }
+
+        const user = await response.json();
+
+        // Atualiza interface
+        document.getElementById("profileName").textContent = user.username || "Usuário";
+        document.getElementById("profileEmail").textContent = user.email || "-";
+
+    }catch(error){
+        console.error("Erro ao carregar perfil:", error);
+    }
+}
+
+// ===============================
+// 🔐 ALTERAR SENHA (CORRIGIDO)
+// ===============================
 async function changePassword() {
     const btn = document.getElementById('changePasswordBtn');
     btn.disabled = true;
@@ -959,6 +981,11 @@ async function changePassword() {
 
         alert("Senha alterada com sucesso!");
 
+        // limpar campos
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+
     } catch (error) {
         console.error(error);
         alert("Erro no servidor");
@@ -966,6 +993,15 @@ async function changePassword() {
         btn.disabled = false;
     }
 }
+
+// ===============================
+// 🚪 LOGOUT
+// ===============================
+function logout(){
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("tipo");
+
+    window.location.href = "/login/";
+}
 </script>
-</body>
-</html>

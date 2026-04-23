@@ -220,7 +220,7 @@
             </tr>
           </thead>
 
-          <tbody>
+          <tbody id="tabela-produtos">
             <tr>
               <td>
                 <div class="product-cell">
@@ -871,8 +871,8 @@
                   </div>
                 </div>
 
-                <!-- Localização -->
-                <div class="col-12 mt-4">
+               <!-- Localização -->
+                <div class= "col-12 mt-4">
                   <h6 class="fw-bold" style="color: #1e293b">
                     Localização no Armazém
                   </h6>
@@ -1012,134 +1012,31 @@ Produto em promoção até fim do mês</textarea
     </div>
 
 <!-- Scripts --><script>
-const API_BASE = "https://pdv-system-c359.onrender.com";
-const API_PRODUTOS = API_BASE + "/api/produtos/";
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-// 🔐 PEGAR TOKEN
-function getToken() {
-  return localStorage.getItem("access");
-}
-
-// 🔐 VERIFICAR LOGIN
-function verificarLogin() {
-  const token = getToken();
-
-  if (!token) {
-    alert("Você precisa estar logado");
-    window.location.href = "/login/";
-  }
-}
-
-// 🔥 LISTAR PRODUTOS DO BACKEND
-async function carregarProdutos() {
-  try {
-    const response = await fetch(API_PRODUTOS, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${getToken()}`
-      }
-    });
-
-    if (!response.ok) {
-      console.error("Erro ao carregar produtos:", response.status);
-      return;
-    }
-
-    const data = await response.json();
-
-    const tbody = document.querySelector("tbody");
-    if (!tbody) return;
-
-    tbody.innerHTML = "";
-
-    data.forEach((produto) => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${produto.nome}</td>
-          <td>${produto.sku}</td>
-          <td>${produto.categoria}</td>
-          <td>R$ ${produto.preco}</td>
-          <td>${produto.estoque}</td>
-          <td>${produto.status ? "Ativo" : "Inativo"}</td>
-          <td>
-            <button onclick="excluirProduto('${produto.id}')">Excluir</button>
-          </td>
-        </tr>
-      `;
-    });
-
-  } catch (error) {
-    console.error("Erro ao carregar produtos:", error);
-  }
-}
-
-// 🔥 EXCLUIR PRODUTO
-async function excluirProduto(id) {
-  if (!confirm("Deseja excluir?")) return;
-
-  try {
-    const response = await fetch(`${API_PRODUTOS}${id}/`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${getToken()}`
-      }
-    });
-
-    if (!response.ok) {
-      console.error("Erro ao excluir:", response.status);
-      return;
-    }
-
-    carregarProdutos();
-
-  } catch (error) {
-    console.error("Erro ao excluir:", error);
-  }
-}
-
-// 🔥 CADASTRAR PRODUTO
-document.getElementById("formCadastrarProduto")
-?.addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  const inputs = this.querySelectorAll("input");
-
-  const produto = {
-    nome: inputs[0].value.trim(),
-    sku: inputs[1].value.trim(),
-    categoria: "Eletrônicos",
-    preco: inputs[3].value,
-    estoque: inputs[4].value
-  };
-
-  try {
-    const response = await fetch(`${API_PRODUTOS}criar/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${getToken()}`
-      },
-      body: JSON.stringify(produto)
-    });
-
-    if (!response.ok) {
-      console.error("Erro ao criar produto:", response.status);
-      return;
-    }
-
-    alert("Produto criado!");
-    carregarProdutos();
-
-  } catch (error) {
-    console.error("Erro ao criar:", error);
-  }
-});
-
-// 🚀 INICIAR
-document.addEventListener("DOMContentLoaded", () => {
-  verificarLogin();
-  carregarProdutos();
-});
+<!-- 🔥 SUA API CENTRAL -->
 <script src="{% static 'js/api.js' %}"></script>
+
+<!-- 👤 USUÁRIOS -->
 <script src="{% static 'js/user.js' %}"></script>
-</script><!-- Scripts principais -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    verificarLogin();
+
+    // Só carrega produtos se a tabela existir
+    if (document.querySelector("tbody")) {
+        carregarProdutos();
+    }
+});
+
+// 🚪 LOGOUT
+function logout(){
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("tipo");
+
+    window.location.href = "/login/";
+}
+</script>

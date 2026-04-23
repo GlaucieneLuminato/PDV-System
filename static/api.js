@@ -24,10 +24,17 @@ async function safeFetch(url, options = {}) {
         throw new Error("Resposta inválida do servidor");
     }
 
-    if (!response.ok) {
-        console.error("Erro da API:", data);
-        throw new Error(data?.detail || "Erro na requisição");
+  if (!response.ok) {
+    const mensagem = data?.detail || data?.message || "Erro na requisição";
+    
+    // 🔥 Se token expirou
+    if (response.status === 401) {
+        localStorage.removeItem("access");
+        window.location.href = "login.html";
     }
+
+    throw new Error(mensagem);
+}
 
     return data;
 }
@@ -73,36 +80,13 @@ async function carregarProdutos(){
     }
 }
 
-function renderizarProdutos(produtos){
-    const container = document.querySelector("#tabela-produtos");
-    if(!container) return;
-
-    container.innerHTML = "";
-
-    produtos.forEach(produto => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>${produto.nome}</td>
-            <td>${produto.sku}</td>
-            <td>${produto.categoria}</td>
-            <td>${produto.estoque}</td>
-            <td>R$ ${produto.preco_custo}</td>
-            <td>R$ ${produto.preco}</td>
-            <td>${produto.estoque <= 5 ? "Baixo" : "OK"}</td>
-            <td>
-                <button class="btn btn-sm btn-warning">Editar</button>
-                <button class="btn btn-sm btn-danger">Excluir</button>
-            </td>
-        `;
-
-        tr.querySelector(".btn-warning").onclick = () => editarProduto(produto);
-        tr.querySelector(".btn-danger").onclick = () => deletarProduto(produto.id);
-
-        container.appendChild(tr);
+async function carregarProdutos(){
+    return await safeFetch(API_PRODUTOS, {
+        headers: {
+            "Authorization": `Bearer ${getToken()}`
+        }
     });
 }
-
 // ================= CRUD =================
 async function criarProduto(produto){
     try{
@@ -162,10 +146,7 @@ async function deletarProduto(id){
 }
 
 // ================= INIT =================
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
     verificarLogin();
-
-    if(document.querySelector("#tabela-produtos")){
-        carregarProdutos();
-    }
+    carregarUsuarios();
 });

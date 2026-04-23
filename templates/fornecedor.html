@@ -512,21 +512,43 @@
         }
 
         // ===== CARREGAR DADOS =====
-        function loadSuppliers() {
-            const storedSuppliers = localStorage.getItem('suppliers');
-            suppliers = storedSuppliers ? JSON.parse(storedSuppliers) : [];
-            filteredSuppliers = [...suppliers];
-            
-            updateFilters();
-            updateStats();
-            renderSuppliers();
-        }
+      async function loadSuppliers() {
+    try {
+        const response = await fetch('https://pdv-system-c359.onrender.com/api/fornecedores/', {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            }
+        });
 
-        function loadProducts() {
-            const storedProducts = localStorage.getItem('products');
-            products = storedProducts ? JSON.parse(storedProducts) : [];
-        }
+        const data = await response.json();
 
+        suppliers = data;
+        filteredSuppliers = [...suppliers];
+
+        updateFilters();
+        updateStats();
+        renderSuppliers();
+
+    } catch (error) {
+        console.error("Erro ao carregar fornecedores:", error);
+        showToast("Erro ao carregar fornecedores", "error");
+    }
+}
+
+      async function loadProducts() {
+    try {
+        const response = await fetch('https://pdv-system-c359.onrender.com/api/produtos/', {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            }
+        });
+
+        products = await response.json();
+
+    } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+    }
+}
         // ===== ATUALIZAR FILTROS =====
         function updateFilters() {
             // Países
@@ -845,14 +867,44 @@
                         suppliers[index] = { ...suppliers[index], ...supplier };
                     }
                     showToast('Fornecedor atualizado com sucesso!', 'success');
-                } else {
-                    // Adicionar novo
-                    suppliers.push(supplier);
-                    showToast('Fornecedor cadastrado com sucesso!', 'success');
-                }
+                } else async function saveSupplier() {
+    try {
+        const supplier = {
+            companyName: document.getElementById('companyName').value,
+            contactName: document.getElementById('contactName').value,
+            taxId: document.getElementById('taxId').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            country: document.getElementById('country').value,
+            rating: parseInt(document.getElementById('rating').value),
+            status: document.getElementById('supplierStatus').checked ? 'active' : 'inactive'
+        };
 
-                // Salvar no localStorage
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
+        const url = currentSupplierId 
+            ? `https://pdv-system-c359.onrender.com/api/fornecedores/${currentSupplierId}/`
+            : `https://pdv-system-c359.onrender.com/api/fornecedores/`;
+
+        const method = currentSupplierId ? "PUT" : "POST";
+
+        await fetch(url, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            },
+            body: JSON.stringify(supplier)
+        });
+
+        showToast("Fornecedor salvo com sucesso!", "success");
+
+        supplierModal.hide();
+        loadSuppliers();
+
+    } catch (error) {
+        console.error("Erro ao salvar fornecedor:", error);
+        showToast("Erro ao salvar fornecedor", "error");
+    }
+}
                 
                 // Atualizar interface
                 filteredSuppliers = [...suppliers];
@@ -1032,27 +1084,25 @@
         }
 
         // ===== EXCLUIR FORNECEDOR =====
-        function deleteSupplier(id) {
-            if (confirm('Tem certeza que deseja excluir este fornecedor?')) {
-                // Verificar se existem produtos vinculados
-                const hasProducts = products.some(p => p.supplierId === id);
-                
-                if (hasProducts) {
-                    if (!confirm('Este fornecedor possui produtos vinculados. Deseja realmente excluí-lo?')) {
-                        return;
-                    }
-                }
+      async function deleteSupplier(id) {
+    if (!confirm('Tem certeza que deseja excluir este fornecedor?')) return;
 
-                suppliers = suppliers.filter(s => s.id !== id);
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
-                
-                filteredSuppliers = [...suppliers];
-                updateStats();
-                renderSuppliers();
-                
-                showToast('Fornecedor excluído com sucesso!', 'success');
+    try {
+        await fetch(`https://pdv-system-c359.onrender.com/api/fornecedores/${id}/`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
             }
-        }
+        });
+
+        showToast("Fornecedor excluído com sucesso!", "success");
+        loadSuppliers();
+
+    } catch (error) {
+        console.error("Erro ao excluir fornecedor:", error);
+        showToast("Erro ao excluir fornecedor", "error");
+    }
+}
 
         // ===== EXPORTAR =====
         function exportSuppliers() {

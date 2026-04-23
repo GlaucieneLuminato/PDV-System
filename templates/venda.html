@@ -1387,18 +1387,23 @@
         }
 
         // ===== CARREGAR DADOS =====
-    async function loadProducts() {
+   async function loadProducts() {
     try {
-        const response = await fetch('https://pdv-system-c359.onrender.com/api/produtos/');
+        const response = await fetch('https://pdv-system-c359.onrender.com/api/produtos/', {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            }
+        });
+
         const data = await response.json();
 
-        // 🔥 AQUI É O LUGAR CERTO
         products = data.map(p => ({
-            ...p,
-            salePrice: Number(p.preco_custo)
+            id: p.id,
+            name: p.nome,
+            category: p.categoria,
+            salePrice: Number(p.preco_venda || p.preco_custo),
+            stock: Number(p.estoque)
         }));
-
-        console.log("PRODUTOS VINDO DO DJANGO:", products);
 
         renderProducts();
         updateCategoryTabs();
@@ -1406,131 +1411,34 @@
     } catch (error) {
         console.error("Erro ao carregar produtos:", error);
     }
+}
+
+async function loadSales() {
+    try {
+        const response = await fetch('https://pdv-system-c359.onrender.com/api/vendas/', {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access")}`
+            }
+        });
+
+        sales = await response.json();
+
+        updateStats();
+        renderSales();
+
+    } catch (error) {
+        console.error("Erro ao carregar vendas:", error);
+    }
+}
         
             // Adicionar produtos de exemplo se não houver nenhum
-            if (products.length === 0) {
-                products = [
-                    {
-                        id: 1,
-                        name: 'Notebook Dell XPS 15',
-                        sku: 'NB-001',
-                        category: 'Eletrônicos',
-                        salePrice: 1299.00,
-                        stock: 15,
-                        minStock: 10,
-                        image: null
-                    },
-                    {
-                        id: 2,
-                        name: 'iPhone 15 Pro',
-                        sku: 'IP-002',
-                        category: 'Smartphones',
-                        salePrice: 1499.00,
-                        stock: 8,
-                        minStock: 5,
-                        image: null
-                    },
-                    {
-                        id: 3,
-                        name: 'Headset Gamer RGB',
-                        sku: 'HS-003',
-                        category: 'Periféricos',
-                        salePrice: 89.90,
-                        stock: 25,
-                        minStock: 10,
-                        image: null
-                    },
-                    {
-                        id: 4,
-                        name: 'Monitor 24" LG',
-                        sku: 'MON-004',
-                        category: 'Eletrônicos',
-                        salePrice: 189.90,
-                        stock: 12,
-                        minStock: 5,
-                        image: null
-                    },
-                    {
-                        id: 5,
-                        name: 'Teclado Mecânico',
-                        sku: 'TEC-005',
-                        category: 'Periféricos',
-                        salePrice: 159.90,
-                        stock: 18,
-                        minStock: 8,
-                        image: null
-                    }
-                ];
-                localStorage.setItem('products', JSON.stringify(products));
-            }
-        }
-
+          
         function loadSuppliers() {
             const storedSuppliers = localStorage.getItem('suppliers');
             suppliers = storedSuppliers ? JSON.parse(storedSuppliers) : [];
         }
 
-        function loadSales() {
-            const storedSales = localStorage.getItem('sales');
-            sales = storedSales ? JSON.parse(storedSales) : [];
-            
-            // Adicionar vendas de exemplo se não houver nenhuma
-            if (sales.length === 0) {
-                const today = new Date();
-                const yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-                
-                sales = [
-                    {
-                        id: 1001,
-                        number: 'V20260001',
-                        date: today.toISOString(),
-                        customer: 'João Silva',
-                        nif: '123456789',
-                        items: [
-                            { productId: 1, name: 'Notebook Dell XPS 15', quantity: 1, price: 1299.00 },
-                            { productId: 3, name: 'Headset Gamer RGB', quantity: 1, price: 89.90 }
-                        ],
-                        subtotal: 1388.90,
-                        tax: 319.45,
-                        total: 1708.35,
-                        paymentMethod: 'card',
-                        status: 'completed'
-                    },
-                    {
-                        id: 1002,
-                        number: 'V20260002',
-                        date: yesterday.toISOString(),
-                        customer: 'Maria Santos',
-                        nif: '987654321',
-                        items: [
-                            { productId: 2, name: 'iPhone 15 Pro', quantity: 1, price: 1499.00 }
-                        ],
-                        subtotal: 1499.00,
-                        tax: 344.77,
-                        total: 1843.77,
-                        paymentMethod: 'mbway',
-                        status: 'completed'
-                    },
-                    {
-                        id: 1003,
-                        number: 'V20260003',
-                        date: yesterday.toISOString(),
-                        customer: 'Consumidor Final',
-                        nif: '',
-                        items: [
-                            { productId: 4, name: 'Monitor 24" LG', quantity: 2, price: 189.90 },
-                            { productId: 5, name: 'Teclado Mecânico', quantity: 1, price: 159.90 }
-                        ],
-                        subtotal: 539.70,
-                        tax: 124.13,
-                        total: 663.83,
-                        paymentMethod: 'cash',
-                        status: 'completed'
-                    }
-                ];
-                localStorage.setItem('sales', JSON.stringify(sales));
-            }
+   
             
             updateStats();
             renderSales();
@@ -1901,21 +1809,15 @@
         status: 'completed'
     };
 
-    cart.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (product) {
-            product.stock -= item.quantity;
-        }
-    });
 
-    localStorage.setItem('products', JSON.stringify(products));
 
-    sales.push(sale);
-    localStorage.setItem('sales', JSON.stringify(sales));
-
+  
     // ✅ AGORA SIM limpa
     cart = [];
     updateCart();
+
+     await loadProducts();
+     await loadSales();
 
     document.getElementById('amountReceived').value = '';
     document.getElementById('finalCustomerName').value = 'Consumidor Final';
@@ -2242,27 +2144,7 @@ function verificarLogin(){
 document.addEventListener("DOMContentLoaded", verificarLogin);
 </script>
 
-<script>
-  
 
-let produtos = [];
-
-async function carregarProdutos(){
-    try{
-        const resposta = await fetch(API_PRODUTOS, {
-            headers:{
-                "Authorization": `Bearer ${localStorage.getItem("access")}`
-            }
-        });
-
-        produtos = await resposta.json();
-        renderizarProdutos(produtos);
-
-    }catch(error){
-        console.error("Erro ao carregar produtos:", error);
-    }
-}
-</script>
 
 </body>
 </html>

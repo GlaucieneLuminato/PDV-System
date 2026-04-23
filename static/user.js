@@ -20,24 +20,18 @@ async function login(event) {
     const username = document.getElementById("usuario").value.trim();
     const password = document.getElementById("senha").value.trim();
 
-    console.log("LOGIN:", username, password);
-
     try {
         const response = await fetch(API_LOGIN, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                username,
-                password
-            })
+            body: JSON.stringify({ username, password })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Erro login:", data);
             alert("Usuário ou senha inválidos!");
             return;
         }
@@ -52,20 +46,21 @@ async function login(event) {
         });
 
         if (!userResponse.ok) {
-            console.error("Erro ao buscar perfil:", userResponse.status);
+            console.error("Erro ao buscar perfil");
             return;
         }
 
         const userData = await userResponse.json();
         localStorage.setItem("tipo", userData.tipo);
 
-        window.location.href = "/dashboard/";
+        window.location.href = "dashboard.html";
 
     } catch (error) {
         console.error("Erro login:", error);
         alert("Erro ao conectar com servidor");
     }
 }
+
 // ===================== PROTEÇÃO DE ROTAS =====================
 function verificarLogin() {
     const token = getToken();
@@ -75,23 +70,16 @@ function verificarLogin() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", verificarLogin);
-
 // ===================== USUÁRIOS =====================
 async function carregarUsuarios() {
     try {
-        const resposta = await fetch(API_USERS, {
+        const data = await safeFetch(API_USERS, {
             headers: {
                 "Authorization": `Bearer ${getToken()}`
             }
         });
 
-        if (!resposta.ok) {
-            console.error("Erro ao carregar usuários");
-            return;
-        }
-
-        users = await resposta.json();
+        users = data;
         renderUsers(users);
 
     } catch (error) {
@@ -108,7 +96,7 @@ async function saveUser() {
     };
 
     try {
-        const resposta = await fetch(API_USERS, {
+        await safeFetch(API_USERS, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -117,15 +105,11 @@ async function saveUser() {
             body: JSON.stringify(user)
         });
 
-        if (resposta.ok) {
-            mostrarToast("Usuário criado com sucesso");
-            carregarUsuarios();
-        } else {
-            mostrarToast("Erro ao criar usuário", "error");
-        }
+        mostrarToast("Usuário criado com sucesso");
+        carregarUsuarios();
 
     } catch (error) {
-        console.error("Erro:", error);
+        mostrarToast(error.message, "error");
     }
 }
 
@@ -138,7 +122,6 @@ function renderUsers(lista) {
     tbody.innerHTML = "";
 
     lista.forEach(user => {
-
         const statusBadge = user.status === "active"
             ? `<span class="badge bg-success">Ativo</span>`
             : `<span class="badge bg-secondary">Inativo</span>`;
@@ -188,6 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
     carregarUsuarios();
 });
 
-// expõe funções globais
+// ===================== GLOBAL =====================
 window.login = login;
 window.saveUser = saveUser;
